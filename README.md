@@ -28,4 +28,4 @@ Try to stick to these shadcn/ui components as much as possible, and only create 
 
 1. Run `npm run build`. If successful, a folder called `out/` will have been compiled.
 2. Run the command `sudo rsync -av --delete out/ /var/www/chatdku/` on the server to update the frontend files on deployment.
-3. Visit [ChatDKU](chatdku.dukekunshan.edu.cn) in incognito mode. Make sure the chat responses are clear and legible.
+3. Visit [ChatDKU](https://chatdku.dukekunshan.edu.cn) in incognito mode. Make sure the chat responses are clear and legible.
