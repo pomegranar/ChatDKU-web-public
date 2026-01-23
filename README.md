@@ -21,7 +21,8 @@ Try to stick to these shadcn/ui components as much as possible, and only create 
 1. Run `npm install` in the frontend directory to install Node dependencies.
 2. Run `npm run dev` to spin up a localhost server and navigate to http://localhost:3000/ to see the homepage. The dev server will hot-reload whenever you save.
 3. Make necessary edits, and review changes on both a desktop screen and a mobile screen. Test with many aspect ratios to make sure nothing clips or looks broken. You can also enter "test" in the chat box to test proper markdown rendering (this is important as users must be able to read ChatDKU's responses easily).
-4. Check that `npm run build` succeeds before pushing to the main branch.
+4. Use `npm run test` to run all tests for essential functionality. 
+5. Check that `npm run build` succeeds before pushing to the main branch.
 
 ### Deploying to production:
 
