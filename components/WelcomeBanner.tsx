@@ -18,7 +18,7 @@ export default function WelcomeBanner() {
 			});
 	}, []);
 
-	if (!me)
+	if (!me || me.username == "")
 		return (
 			<h1 className="text-xl md:text-2xl lg:text-3xl">Welcome to ChatDKU</h1>
 		); // still loading or not logged in
