@@ -50,3 +50,16 @@ export async function GET(
 
   return NextResponse.json({ error: 'Not found' }, { status: 404 });
 }
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ path?: string[] }> }
+) {
+  const { path } = await params;
+
+  const sessionId = path?.[0];
+
+  console.log("Mock delete session:", sessionId);
+
+  return Response.json({ deleted: sessionId });
+}

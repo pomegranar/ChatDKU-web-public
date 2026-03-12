@@ -209,3 +209,30 @@ export function clearStoredEndpoint(): void {
   if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
   localStorage.removeItem(ENDPOINT_STORAGE_KEY);
 }
+
+/**
+ * Delete a conversation session
+ */
+export async function deleteConversation(id: string): Promise<boolean> {
+  try {
+    const response = await fetch(`/api/c/${id}/`, {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        "UID": "dev_user",
+        "X-DisplayName": "Dev User"
+      },
+    });
+
+    if (response.ok) {
+      return true;
+    } else {
+      console.error('Failed to delete conversation:', response.status);
+      return false;
+    }
+  } catch (error) {
+    console.error('Error deleting conversation:', error);
+    return false;
+  }
+}
