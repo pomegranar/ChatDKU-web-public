@@ -3,8 +3,7 @@ import type { NextConfig } from "next";
 const isDevMode = process.env.NODE_ENV === 'development';
 
 const nextConfig: NextConfig = {
-  // Only use static export in production
-  ...(isDevMode ? {} : { output: 'export' }),
+  // Server mode required for API routes (JWT proxy)
   trailingSlash: true,
   
   // Images configuration

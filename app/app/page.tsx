@@ -557,20 +557,28 @@ export default function App() {
 										if (value.trim().toLowerCase() === "test") {
 											return fetch("/mdtest.md");
 										}
-										const url = isDev
-											? apiEndpoint
-											: "https://chatdku.dukekunshan.edu.cn/public/chat";
-										return fetch(url, {
+										// Collect chat history from the DOM
+										const chatLogEl = document.getElementById("chat-log");
+										const history: [string, string][] = [];
+										if (chatLogEl) {
+											const messageDivs = chatLogEl.querySelectorAll(":scope > div");
+											messageDivs.forEach((div) => {
+												const isUser = div.querySelector(".items-end") !== null;
+												const contentEl = div.querySelector(".markdown-content");
+												const content = contentEl?.textContent?.trim() || "";
+												if (content) {
+													history.push([isUser ? "user" : "assistant", content]);
+												}
+											});
+										}
+										return fetch("/api/chat", {
 											method: "POST",
 											headers: {
 												"Content-Type": "application/json",
-												"X-PUBLIC-USER": "true",
 											},
 											body: JSON.stringify({
 												messages: [{ role: "user", content: value }],
-												chatHistoryId: sessionId,
-												mode: thinkingMode ? "agent" : "",
-												searchMode: searchMode,
+												history,
 											}),
 										});
 									};
