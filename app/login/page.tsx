@@ -2,7 +2,6 @@
 import { TermsButton } from "@/components/about";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { getNewSession } from "@/lib/convosNew";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
@@ -31,11 +30,14 @@ export default function LoginPage() {
 		if (termsAccepted) {
 			// Set cookie for terms acceptance - expires in 60 days
 			Cookies.set("terms_accepted", "true", { expires: 60 });
-			// Navigate to the main app
+			// Fetch JWT so the Python chat API allows requests
 			try {
-				await getNewSession();
+				const res = await fetch("/api/auth/token");
+				if (!res.ok) throw new Error(`Token fetch failed: ${res.status}`);
+				const { token } = await res.json();
+				Cookies.set("chatdku_token", token, { expires: 1 });
 			} catch (e) {
-				console.error("session create failed");
+				console.error("JWT fetch failed:", e);
 			}
 			router.push("/app");
 		}
