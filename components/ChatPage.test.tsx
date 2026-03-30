@@ -3,7 +3,7 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
-import ChatPage from './ChatPage';
+import App from '../app/app/page';
 
 // Mock dependencies
 jest.mock('next/navigation', () => ({
@@ -82,7 +82,7 @@ jest.mock('@/components/prompt_recs', () => ({
 // Mock fetch for test endpoint
 const mockFetch = global.fetch as jest.Mock;
 
-describe('ChatPage', () => {
+describe('App', () => {
   const mockPush = jest.fn();
   const mockRouter = { push: mockPush } as any;
 
@@ -109,7 +109,7 @@ describe('ChatPage', () => {
   });
 
   it('renders loading state initially', () => {
-    render(<ChatPage />);
+    render(<App />);
     
     expect(screen.getByText('Preparing your chat session...')).toBeInTheDocument();
     expect(screen.getByTestId('navbar')).toBeInTheDocument();
@@ -118,7 +118,7 @@ describe('ChatPage', () => {
   it('redirects to landing when terms not accepted', async () => {
     (Cookies.get as jest.Mock).mockReturnValue(null);
     
-    render(<ChatPage />);
+    render(<App />);
     
 await waitFor(() => {
       expect(global.fetch as jest.Mock).toHaveBeenCalledWith(
@@ -133,7 +133,7 @@ await waitFor(() => {
   });
 
   it('loads chat interface when session is ready', async () => {
-    render(<ChatPage />);
+    render(<App />);
     
     await waitFor(() => {
       expect(screen.getByTestId('ai-input')).toBeInTheDocument();
@@ -146,7 +146,7 @@ await waitFor(() => {
     const { getNewSession } = require('@/lib/convosNew');
     getNewSession.mockResolvedValue(null);
     
-    render(<ChatPage />);
+    render(<App />);
     
     await waitFor(() => {
       expect(screen.getByText(/We couldn't start a chat session/)).toBeInTheDocument();
@@ -161,7 +161,7 @@ await waitFor(() => {
       text: () => Promise.resolve('Test response'),
     });
     
-    render(<ChatPage />);
+    render(<App />);
     
     await waitFor(() => {
       expect(screen.getByTestId('ai-input')).not.toBeDisabled();
@@ -185,7 +185,7 @@ await waitFor(() => {
     const { getNewSession } = require('@/lib/convosNew');
     getNewSession.mockResolvedValue('new-session-id');
     
-    render(<ChatPage />);
+    render(<App />);
     
     await waitFor(() => {
       expect(screen.getByTestId('new-chat-button')).toBeInTheDocument();
@@ -205,7 +205,7 @@ await waitFor(() => {
       text: () => Promise.resolve('# Test Markdown\n\nThis is a test.'),
     });
     
-    render(<ChatPage isDev={true} />);
+    render(<App />);
     
     await waitFor(() => {
       expect(screen.getByTestId('ai-input')).not.toBeDisabled();
@@ -230,7 +230,7 @@ await waitFor(() => {
     const { getNewSession } = require('@/lib/convosNew');
     getNewSession.mockResolvedValue(null);
     
-    render(<ChatPage />);
+    render(<App />);
     
     await waitFor(() => {
       expect(screen.getByTestId('ai-input')).toBeDisabled();
@@ -243,7 +243,7 @@ await waitFor(() => {
     getNewSession.mockResolvedValueOnce(null); // Initial failure
     getNewSession.mockResolvedValueOnce('retry-session-id'); // Retry success
     
-    render(<ChatPage />);
+    render(<App />);
     
     await waitFor(() => {
       expect(screen.getByText('Try again')).toBeInTheDocument();
@@ -265,7 +265,7 @@ await waitFor(() => {
     ];
     getSessionMessages.mockResolvedValue(mockMessages);
     
-    render(<ChatPage />);
+    render(<App />);
     
     await waitFor(() => {
       expect(screen.getByTestId('new-chat-button')).toBeInTheDocument();
@@ -282,7 +282,7 @@ await waitFor(() => {
       text: () => Promise.resolve('Dev response'),
     });
     
-    render(<ChatPage isDev={true} />);
+    render(<App />);
     
     await waitFor(() => {
       expect(screen.getByTestId('ai-input')).not.toBeDisabled();
