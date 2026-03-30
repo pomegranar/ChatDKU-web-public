@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
-const BACKEND_BASE = 'https://chatdku.dukekunshan.edu.cn:8999';
+const BACKEND_BASE = "https://chatdku.dukekunshan.edu.cn/public";
 const AUTH_URL = `${BACKEND_BASE}/auth/get-token`;
 const CHAT_URL = `${BACKEND_BASE}/api/chat`;
 
@@ -16,32 +16,34 @@ async function getJwt(): Promise<string> {
 
   const secret = process.env.JWT_SECRET;
   if (!secret) {
-    throw new Error('JWT_SECRET environment variable is not set');
+    throw new Error("JWT_SECRET environment variable is not set");
   }
 
   const response = await fetch(AUTH_URL, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'X-Secret': secret,
+      "X-Secret": secret,
     },
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to get JWT token: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `Failed to get JWT token: ${response.status} ${response.statusText}`,
+    );
   }
 
   const data = await response.json();
   const token = data.token || data.access_token;
 
   if (!token) {
-    throw new Error('No token returned from auth endpoint');
+    throw new Error("No token returned from auth endpoint");
   }
 
   cachedToken = token;
 
   // Try to extract expiry from JWT payload; default to 55 minutes
   try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
+    const payload = JSON.parse(atob(token.split(".")[1]));
     if (payload.exp) {
       tokenExpiresAt = payload.exp * 1000;
     } else {
@@ -68,10 +70,12 @@ export async function POST(request: Request) {
   const body = await request.json();
 
   // Mock by default in dev; set MOCK_API=false in .env.local to proxy to the backend
-  const useMock = process.env.NODE_ENV === 'development' && process.env.MOCK_API !== 'false';
+  const useMock =
+    process.env.NODE_ENV === "development" && process.env.MOCK_API !== "false";
   if (useMock) {
-    const userMessage = body?.messages?.[0]?.content ?? 'your question';
-    const pick = MOCK_RESPONSES[Math.floor(Math.random() * MOCK_RESPONSES.length)];
+    const userMessage = body?.messages?.[0]?.content ?? "your question";
+    const pick =
+      MOCK_RESPONSES[Math.floor(Math.random() * MOCK_RESPONSES.length)];
     const fullText = pick(userMessage);
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
@@ -79,13 +83,13 @@ export async function POST(request: Request) {
         const words = fullText.split(/(\s+)/);
         for (const word of words) {
           controller.enqueue(encoder.encode(word));
-          await new Promise(resolve => setTimeout(resolve, 30));
+          await new Promise((resolve) => setTimeout(resolve, 30));
         }
         controller.close();
       },
     });
     return new NextResponse(stream, {
-      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
     });
   }
 
@@ -99,15 +103,15 @@ export async function POST(request: Request) {
     const history: [string, string][] = (body.history || []).map(
       (entry: { role?: string; content?: string } | [string, string]) => {
         if (Array.isArray(entry)) return entry;
-        return [entry.role || 'user', entry.content || ''];
-      }
+        return [entry.role || "user", entry.content || ""];
+      },
     );
 
     const backendResponse = await fetch(CHAT_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         messages,
@@ -122,10 +126,10 @@ export async function POST(request: Request) {
       const freshToken = await getJwt();
 
       const retryResponse = await fetch(CHAT_URL, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${freshToken}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${freshToken}`,
         },
         body: JSON.stringify({
           messages,
@@ -140,7 +144,7 @@ export async function POST(request: Request) {
       }
 
       return new NextResponse(retryResponse.body, {
-        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+        headers: { "Content-Type": "text/plain; charset=utf-8" },
       });
     }
 
@@ -151,13 +155,13 @@ export async function POST(request: Request) {
     }
 
     return new NextResponse(backendResponse.body, {
-      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
     });
   } catch (error) {
-    console.error('Chat proxy error:', error);
+    console.error("Chat proxy error:", error);
     return new NextResponse(
-      `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      { status: 500 }
+      `Error: ${error instanceof Error ? error.message : "Unknown error"}`,
+      { status: 500 },
     );
   }
 }

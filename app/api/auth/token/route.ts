@@ -1,20 +1,20 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
-const BACKEND_BASE = 'https://chatdku.dukekunshan.edu.cn:8999';
+const BACKEND_BASE = "https://chatdku.dukekunshan.edu.cn/public";
 const AUTH_URL = `${BACKEND_BASE}/auth/get-token`;
 
 export async function GET() {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
     return NextResponse.json(
-      { error: 'JWT_SECRET not configured' },
+      { error: "JWT_SECRET not configured" },
       { status: 500 },
     );
   }
 
   const response = await fetch(AUTH_URL, {
-    method: 'POST',
-    headers: { 'X-Secret': secret },
+    method: "POST",
+    headers: { "X-Secret": secret },
   });
 
   if (!response.ok) {
@@ -29,7 +29,7 @@ export async function GET() {
 
   if (!token) {
     return NextResponse.json(
-      { error: 'No token returned from auth endpoint' },
+      { error: "No token returned from auth endpoint" },
       { status: 502 },
     );
   }
