@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
-const BACKEND_BASE = "https://chatdku.dukekunshan.edu.cn/public";
+const BACKEND_BASE =
+  process.env.BACKEND_BASE_URL || "https://chatdku.dukekunshan.edu.cn:8999";
 const AUTH_URL = `${BACKEND_BASE}/auth/get-token`;
 const CHAT_URL = `${BACKEND_BASE}/api/chat`;
 
