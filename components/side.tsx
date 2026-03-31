@@ -55,6 +55,8 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+import { useLanguage } from "@/components/language-provider";
+
 interface SidebarProps {
 	onEndpointChange?: (endpoint: string) => void;
 	onNewChat: () => void;
@@ -84,6 +86,7 @@ export default function Side({
 	const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 	const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
 	const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+	const { t } = useLanguage();
 
 	// Keep filtered list in sync with base conversations when no search
 	useEffect(() => {
@@ -190,26 +193,26 @@ export default function Side({
 								onClick={onNewChat}
 							>
 								<SquarePen />
-								New Chat
+								{t("side.newChat")}
 							</Button>
 
 							<Link href="/about">
 								<Button variant="inChatbox" className="w-full justify-start">
 									<MessageCircleQuestion />
-									About ChatDKU
+									{t("side.aboutChatDKU")}
 								</Button>
 							</Link>
 
 							<Link href="https://chatdku.dukekunshan.edu.cn/">
 								<Button variant="inChatbox" className="w-full justify-start">
 									<LogIn />
-									Login with Duke NetID
+									{t("side.loginNetID")}
 								</Button>
 							</Link>
 
 							<div className={cn(!isDevRoute && "hidden")}>
 								<p className="ml-2 mt-4 text-sm text-muted-foreground">
-									Model Selection
+									{t("side.modelSelection")}
 								</p>
 								<ComboBoxResponsive
 									inputValue={currentEndpoint || ""}
@@ -219,16 +222,16 @@ export default function Side({
 							<TooltipProvider>
 								<Tooltip>
 									<TooltipContent>
-										History not saved for guest users.
+										{t("side.historyDisabled")}
 									</TooltipContent>
 									<TooltipTrigger className="text-left opacity-50 cursor-not-allowed">
 										<div>
 											<p className="ml-2 mt-4 text-sm text-muted-foreground">
-												Chat History
+												{t("side.chatHistory")}
 											</p>
 											<div className="pb-2">
 												<Input
-													placeholder="Search chats"
+													placeholder={t("side.searchChats")}
 													value={searchQuery}
 													onChange={(e) => setSearchQuery(e.target.value)}
 												/>
@@ -279,45 +282,13 @@ export default function Side({
 																		</div>
 																	</div>
 																</div>
-
-																{/* <DropdownMenu
-													onOpenChange={(open) =>
-														setActiveMenuId(open ? conversation.id : null)
-													}
-												>
-													<DropdownMenuTrigger asChild>
-														<Button
-															variant="ghost"
-															size="icon"
-															className={cn(
-																"h-8 w-8 transition-opacity",
-																activeMenuId === conversation.id
-																	? "opacity-100 bg-muted"
-																	: "opacity-0 group-hover:opacity-100",
-															)}
-															onClick={(e) => e.stopPropagation()}
-														>
-															<MoreHorizontal className="h-4 w-4" />
-														</Button>
-													</DropdownMenuTrigger>
-
-													<DropdownMenuContent align="start" side="bottom">
-														<DropdownMenuItem
-															onClick={() => openDeleteDialog(conversation.id)}
-															className="group flex items-center gap-2 text-red-500 hover:text-foreground"
-														>
-															<Trash2 className="h-4 w-4 text-red-500 group-hover:text-foreground" />
-															Delete
-														</DropdownMenuItem>
-													</DropdownMenuContent> 
-												</DropdownMenu> */}
 															</div>
 														))
 													) : (
 														<div className="text-sm text-sidebar-foreground/60 text-center py-4">
 															{searchQuery.trim()
-																? "No matches"
-																: "No conversations yet"}
+																? t("side.noMatches")
+																: t("side.noConversations")}
 														</div>
 													)}
 												</div>
@@ -333,16 +304,16 @@ export default function Side({
 				<Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
 					<DialogContent>
 						<DialogHeader>
-							<DialogTitle>Delete chat?</DialogTitle>
+							<DialogTitle>{t("side.deleteChat")}</DialogTitle>
 						</DialogHeader>
 
 						<p className="text-sm text-muted-foreground">
-							This will permanently delete this chat history.
+							{t("side.deleteConfirm")}
 						</p>
 
 						<DialogFooter className="mt-4 flex justify-end gap-2">
 							<Button variant="outline" onClick={() => setIsDeleteOpen(false)}>
-								Cancel
+								{t("side.cancel")}
 							</Button>
 
 							<Button
@@ -354,7 +325,7 @@ export default function Side({
 									setIsDeleteOpen(false);
 								}}
 							>
-								Delete
+								{t("side.delete")}
 							</Button>
 						</DialogFooter>
 					</DialogContent>

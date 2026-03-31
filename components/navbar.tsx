@@ -18,6 +18,7 @@ import {
 import DynamicLogo from "@/components/dynamic-logo";
 import { Badge } from "@/components/ui/badge";
 import { ModeToggle } from "./ui/mode-toggle";
+import { LanguageToggle } from "./ui/language-toggle";
 import Link from "next/link";
 
 export function Navbar() {
@@ -66,24 +67,9 @@ export function Navbar() {
         </TooltipProvider>
       </div>
       <NavigationMenuList>
-        {/* <NavigationMenuItem> */}
-        {/*   <TooltipProvider> */}
-        {/*     <Tooltip> */}
-        {/*       <TooltipTrigger asChild> */}
-        {/*         <NavigationMenuLink */}
-        {/*           href={isDevRoute ? "/dev" : "/"} */}
-        {/*           className="lg:text-md flex flex-row items-center" */}
-        {/*         > */}
-        {/*           <p className="hidden sm:block">New Chat</p> */}
-        {/*           <SquarePen className="size-5 text-primary-500" /> */}
-        {/*         </NavigationMenuLink> */}
-        {/*       </TooltipTrigger> */}
-        {/*       <TooltipContent className="sm:hidden"> */}
-        {/*         <p>New Chat</p> */}
-        {/*       </TooltipContent> */}
-        {/*     </Tooltip> */}
-        {/*   </TooltipProvider> */}
-        {/* </NavigationMenuItem> */}
+        <NavigationMenuItem>
+          <LanguageToggle />
+        </NavigationMenuItem>
         <NavigationMenuItem>
           <ModeToggle />
         </NavigationMenuItem>

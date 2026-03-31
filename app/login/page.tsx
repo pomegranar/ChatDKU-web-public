@@ -16,6 +16,8 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { Cormorant_Garamond } from "next/font/google";
+import { useLanguage } from "@/components/language-provider";
+import { LanguageToggle } from "@/components/ui/language-toggle";
 
 const cgaramond = Cormorant_Garamond({
 	variable: "--font-garamond",
@@ -26,6 +28,7 @@ const cgaramond = Cormorant_Garamond({
 export default function LoginPage() {
 	const [termsAccepted, setTermsAccepted] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	const { t } = useLanguage();
 
 	const router = useRouter();
 
@@ -42,7 +45,7 @@ export default function LoginPage() {
 				Cookies.set("chatdku_token", token, { expires: 1 });
 			} catch (e) {
 				console.error("JWT fetch failed:", e);
-				toast.error("Couldn't connect to server. Please try again later.");
+				toast.error(t("login.serverError"));
 				setIsLoading(false);
 				return;
 			}
@@ -72,23 +75,24 @@ export default function LoginPage() {
 						/>
 						<b className="ml-1">ChatDKU</b>
 					</h1>
-					<div className="sm:space-x-2">
+					<div className="sm:space-x-2 flex items-center">
 						<Link href={"/"}>
-							<Button variant="link">Home</Button>
+							<Button variant="link">{t("login.home")}</Button>
 						</Link>
 						<Link href={"/about"}>
-							<Button variant="link">About</Button>
+							<Button variant="link">{t("login.about")}</Button>
 						</Link>
 						<Link href={"/team-credits"}>
-							<Button variant="link">Team</Button>
+							<Button variant="link">{t("login.team")}</Button>
 						</Link>
+						<LanguageToggle />
 					</div>
 				</div>
 				<div className="mx-5 my-20 max-w-[500]">
 					<h1
 						className={`text-5xl font-lighter text-center font-serif tracking-tight drop-shadow-2xl drop-shadow-green-300/20 fade-slide-in ${cgaramond.variable}`}
 					>
-						Navigating university has never been easier.
+						{t("login.tagline")}
 					</h1>
 				</div>
 				<div className="flex flex-col items-center space-y-4 outline p-10 rounded-3xl shadow">
@@ -104,12 +108,12 @@ export default function LoginPage() {
 							htmlFor="terms"
 							className="cursor-pointer text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
 						>
-							Accept Terms and Conditions
+							{t("login.acceptTerms")}
 						</label>
 					</div>
 
 					<p className="text-xs text-muted-foreground">
-						We save a cookie to remember your preferences.
+						{t("login.cookieNotice")}
 					</p>
 				</div>
 
@@ -128,11 +132,11 @@ export default function LoginPage() {
 											<Loader2 className="animate-spin" />
 										) : (
 											<p>
-												Proceed as <span className="font-bold">guest</span>
+												{t("login.guest")} <span className="font-bold">{t("login.guestBold")}</span>
 											</p>
 										)}
 									</Button>
-									<p className="opacity-80 pb-2">or</p>
+									<p className="opacity-80 pb-2">{t("login.or")}</p>
 									<Link href={"https://chatdku.dukekunshan.edu.cn/"}>
 										<Button
 											variant="default"
@@ -140,8 +144,8 @@ export default function LoginPage() {
 											disabled={!termsAccepted || isLoading}
 										>
 											<p>
-												Log in with{" "}
-												<span className="font-bold">Duke NetID</span>
+												{t("login.netid")}{" "}
+												<span className="font-bold">{t("login.netidBold")}</span>
 											</p>
 										</Button>
 									</Link>
@@ -149,14 +153,14 @@ export default function LoginPage() {
 							</TooltipTrigger>
 							{!termsAccepted && (
 								<TooltipContent>
-									<p>Please accept the Terms and Conditions to use ChatDKU</p>
+									<p>{t("login.termsTooltip")}</p>
 								</TooltipContent>
 							)}
 						</Tooltip>
 					</TooltipProvider>
 				</div>
 				<div className="p-2 text-xs opacity-50 mt-10 w-full text-end">
-					2026 Edge Intelligence Lab
+					{t("login.footer")}
 				</div>
 			</div>
 		</div>

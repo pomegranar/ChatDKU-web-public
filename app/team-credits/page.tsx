@@ -4,7 +4,21 @@ import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { BackButton } from "@/components/backButton";
+import { useLanguage } from "@/components/language-provider";
 import Link from "next/link";
+
+function ExpandToggle({ expanded, onClick }: { expanded: boolean; onClick: () => void }) {
+  const { t } = useLanguage();
+  return (
+    <Button
+      variant="link"
+      className="px-0 text-sm"
+      onClick={onClick}
+    >
+      {expanded ? t("team.showLess") : t("team.showMore")}
+    </Button>
+  );
+}
 
 type MemberProps = {
   name: string;
@@ -64,13 +78,7 @@ function MajorMember({
               {role}
             </p>
 
-            <Button
-              variant="link"
-              className="px-0 text-sm"
-              onClick={() => setExpanded(!expanded)}
-            >
-              {expanded ? "Show less" : "Show more"}
-            </Button>
+            <ExpandToggle expanded={expanded} onClick={() => setExpanded(!expanded)} />
           </div>
         )}
       </div>
@@ -108,6 +116,7 @@ function GridMember({
 }
 
 export default function TeamCreditsPage() {
+  const { t } = useLanguage();
   return (
     <div className="flex justify-center py-10">
       <div className="w-10/12 max-w-4xl space-y-10">
@@ -124,12 +133,12 @@ export default function TeamCreditsPage() {
             height={60}
             className="object-contain"
           />
-          <h1 className="text-3xl font-bold">Credits</h1>
+          <h1 className="text-3xl font-bold">{t("team.credits")}</h1>
         </div>
 
         {/* Core Members */}
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold">Core Members</h2>
+          <h2 className="text-xl font-semibold">{t("team.coreMembers")}</h2>
 
           <MajorMember
             name="Bing Luo"
@@ -212,7 +221,7 @@ export default function TeamCreditsPage() {
 
         {/* New Members */}
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold">New Members</h2>
+          <h2 className="text-xl font-semibold">{t("team.newMembers")}</h2>
 
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-6">
             <GridMember
@@ -248,7 +257,7 @@ export default function TeamCreditsPage() {
 
         {/* Alumni */}
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold">Alumni</h2>
+          <h2 className="text-xl font-semibold">{t("team.alumni")}</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <GridMember
