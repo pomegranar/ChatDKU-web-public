@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/components/language-provider";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
 	variable: "--font-inter",
@@ -33,6 +34,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" suppressHydrationWarning>
+			<Analytics />
 			<body className={`${inter.variable} antialiased`}>
 				<ThemeProvider
 					attribute="class"
