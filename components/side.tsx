@@ -217,7 +217,7 @@ export default function Side({
                 onClick={onCampusMap}
               >
                 <Map />
-                Campus Map
+                Campus Resources
               </Button>
 
 							<div className={cn(!isDevRoute && "hidden")}>

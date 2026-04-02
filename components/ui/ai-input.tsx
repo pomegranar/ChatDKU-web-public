@@ -249,7 +249,6 @@ export function AIInput({
         </style>
 
         <div className="flex flex-col">
-          {/* Reference 标签（你的地图功能）*/}
           {activeReference && (
             <div className="flex items-center justify-between 
                             bg-gray-200/80 dark:bg-gray-700/80 
@@ -267,7 +266,6 @@ export function AIInput({
             </div>
           )}
 
-          {/* 输入框 + 按钮 */}
           <div className="flex flex-row items-center">
             <Textarea
               autoFocus

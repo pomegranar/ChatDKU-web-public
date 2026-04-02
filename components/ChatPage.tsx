@@ -34,7 +34,7 @@ const configureMarked = () => {
 
 const parseMarkdown = (content: string): string => {
 	if (!content) return "";
-	const cleanedContent = content.replace(/[\s\S]*?<\/think>/gi, "");
+	const cleanedContent = content.replace(/<think>[\s\S]*?<\/think>/gi, "");
 	const parsed = marked.parse(cleanedContent) as any;
 	if (typeof parsed?.then === "function") {
 		return cleanedContent;
@@ -141,7 +141,7 @@ const streamFromReader = async (
 			}
 
 			accumulated += decoder.decode(value, { stream: true });
-			const cleaned = accumulated.replace(/[\s\S]*?<\/think>/gi, "");
+			const cleaned = accumulated.replace(/<think>[\s\S]*?<\/think>/gi, "");
 			contentDiv.innerHTML = parseMarkdown(cleaned);
 
 			const chatLog = document.getElementById("chat-log");
@@ -149,7 +149,7 @@ const streamFromReader = async (
 		}
 
 		accumulated += decoder.decode();
-		const cleaned = accumulated.replace(/[\s\S]*?<\/think>/gi, "");
+		const cleaned = accumulated.replace(/<think>[\s\S]*?<\/think>/gi, "");
 		contentDiv.innerHTML = parseMarkdown(cleaned);
 
 		return { success: true, text: accumulated };
@@ -164,7 +164,7 @@ const streamText = async (
 	elementContainer: HTMLElement,
 	chunkDelayMs = 60,
 ) => {
-	const cleanedText = text.replace(/[\s\S]*?<\/think>/gi, "");
+	const cleanedText = text.replace(/<think>[\s\S]*?<\/think>/gi, "");
 
 	if (!document.getElementById("stream-style")) {
 		const style = document.createElement("style");
@@ -550,14 +550,12 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 							onSubmit={async (value) => {
 								if (!value.trim()) return;
 
-								// 你的地图功能：保留 reference 拼接
 								let finalValue = value.trim();
 								if (activeReference) {
 									finalValue = `${activeReference}, ${finalValue}`;
 									setActiveReference(null);
 								}
 
-								// 学长逻辑：防重复提交
 								if (isAwaitingResponse) return;
 								setIsAwaitingResponse(true);
 								let botMessage: HTMLElement | null = null;
@@ -579,7 +577,6 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 										setChatHistoryId(activeSessionId);
 									}
 
-									// 发送用户消息
 									addMessageToChat(
 										"user",
 										finalValue,
@@ -590,7 +587,6 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 									const rawBotMessage = addAssistantRawHtml(getSearchLoaderHTML(), "text-sm");
 									botMessage = rawBotMessage instanceof HTMLElement ? rawBotMessage : null;
 
-									// 请求接口
 									const fetchChat = async (sessionId: string) => {
 										if (value.trim().toLowerCase() === "test") {
 											return fetch("/mdtest.md");
@@ -612,7 +608,6 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 
 									let response = await fetchChat(activeSessionId);
 
-									// 错误重试
 									if (!response.ok) {
 										const newSession = await getNewSession();
 										if (newSession) {
@@ -624,12 +619,10 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 
 									if (!response.ok) throw new Error("Failed to fetch response");
 
-									// 移除加载动画
 									if (botMessage) {
 										botMessage.remove();
 									}
 
-									// 流式输出
 									const messageDiv = addMessageToChat(
 										"assistant",
 										"",
@@ -667,7 +660,6 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 										);
 									}
 
-									// 反馈按钮
 									if (messageDiv) {
 										const feedbackDiv = document.createElement("div");
 										feedbackDiv.className = "ml-4 mb-2";

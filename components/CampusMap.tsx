@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 type SubItem = {
   name: string;
@@ -8,6 +8,7 @@ type SubItem = {
   hours?: string;
   location: string;
   image?: string;
+  introduction?: string;
 };
 
 type Marker = {
@@ -17,6 +18,7 @@ type Marker = {
   left: number;
   items: SubItem[];
 };
+
 
 const markers: Marker[] = [
   {
@@ -49,7 +51,7 @@ const markers: Marker[] = [
       },
     ],
   },
-    {
+  {
     id: 3,
     type: "building",
     top: 480,
@@ -64,7 +66,7 @@ const markers: Marker[] = [
       },
     ],
   },
-    {
+  {
     id: 4,
     type: "building",
     top: 312,
@@ -79,7 +81,7 @@ const markers: Marker[] = [
       },
     ],
   },
-    {
+  {
     id: 5,
     type: "building",
     top: 390,
@@ -94,7 +96,7 @@ const markers: Marker[] = [
       },
     ],
   },
-    {
+  {
     id: 6,
     type: "building",
     top: 470,
@@ -109,7 +111,7 @@ const markers: Marker[] = [
       },
     ],
   },
-    {
+  {
     id: 7,
     type: "building",
     top: 305,
@@ -124,7 +126,7 @@ const markers: Marker[] = [
       },
     ],
   },
-    {
+  {
     id: 8,
     type: "building",
     top: 300,
@@ -139,7 +141,7 @@ const markers: Marker[] = [
       },
     ],
   },
-    {
+  {
     id: 9,
     type: "building",
     top: 295,
@@ -154,7 +156,7 @@ const markers: Marker[] = [
       },
     ],
   },
-    {
+  {
     id: 10,
     type: "building",
     top: 165,
@@ -169,7 +171,7 @@ const markers: Marker[] = [
       },
     ],
   },
-    {
+  {
     id: 11,
     type: "building",
     top: 180,
@@ -184,7 +186,7 @@ const markers: Marker[] = [
       },
     ],
   },
-    {
+  {
     id: 12,
     type: "building",
     top: 390,
@@ -199,7 +201,7 @@ const markers: Marker[] = [
       },
     ],
   },
-    {
+  {
     id: 13,
     type: "building",
     top: 483,
@@ -214,7 +216,7 @@ const markers: Marker[] = [
       },
     ],
   },
-    {
+  {
     id: 14,
     type: "building",
     top: 335,
@@ -241,6 +243,7 @@ const markers: Marker[] = [
         hours: "Weekdays: 9:00 - 17:30",
         location: "CCTE 1019",
         image: "/photos/career.png",
+        introduction: "Providing career development services to help students achieve their professional goals",
       },
       {
         name: "Health Services",
@@ -248,60 +251,69 @@ const markers: Marker[] = [
         hours: "Weekdays: 9:00 - 12:00 & 13:00 - 17:30",
         location: "CCTE 4200",
         image: "/photos/Health.png",
+        introduction: "Offering high-quality primary care and health education to the DKU community",
       },
       {
         name: "Office of Student Experience",
         description: "",
         location: "CCTE 4100 suite",
         image: "/photos/Experience.png",
+        introduction: "Developing students holistically through transformative co-curricular experiences",
       },
       {
         name: "Campus Engagement",
         description: "dkucampusengagement@dukekunshan.edu.cn",
         location: "CCTE 2019",
         image: "/photos/Engagement.png",
+        introduction: "Creating a welcoming community to support student transition and personal growth",
       },
       {
         name: "Chinese Student Services",
         description: "dku-chinese-student-services@dukekunshan.edu.cn",
-        hours:"Weekdays: 9:00-12:00 & 13:00-17:30",
+        hours: "Weekdays: 9:00-12:00 & 13:00-17:30",
         location: "CCTE 4100",
         image: "/photos/Chinese.png",
+        introduction: "Cultivating ethically responsible citizens through community and leadership programs",
       },
       {
         name: "International Student Services",
         description: "DKU-ISS@dukekunshan.edu.cn",
-        hours:"Weekdays: 9:00-17:30",
+        hours: "Weekdays: 9:00-17:30",
         location: "CCTE 4111 & 4121",
         image: "/photos/ISS.png",
+        introduction: "Assisting international students with visas, residence permits, and cultural integration",
       },
       {
         name: "Counseling and Wellness Services (CAWS)",
         description: "caws@dukekunshan.edu.cn",
-        hours:"Weekdays: 9:00-12:00 & 13:00-17:30",
+        hours: "Weekdays: 9:00-12:00 & 13:00-17:30",
         location: "CCTE 4300",
         image: "/photos/CAWS.png",
+        introduction: "Promoting mental health and well-being through support and intervention services",
       },
       {
         name: "Student Conduct",
         description: "studentconduct@dukekunshan.edu.cn",
-        hours:"Weekdays: 9:00-17:30",
+        hours: "Weekdays: 9:00-17:30",
         location: "CCTE 4100 suite",
         image: "/photos/Conduct.png",
+        introduction: "Educating students on rights and responsibilities, administering non-academic conduct",
       },
       {
         name: "Case Management",
         description: "Dku-ocm@dukekunshan.edu.cn",
-        hours:"Weekdays: 9:00-12:00 & 13:00-17:30",
+        hours: "Weekdays: 9:00-12:00 & 13:00-17:30",
         location: "CCTE 4126",
         image: "/photos/Case.png",
+        introduction: "Identifying and supporting students facing obstacles to success and holistic wellness",
       },
       {
         name: "Student Accessibility Services Office (SASO)",
         description: "SASO@dukekunshan.edu.cn",
-        hours:"Weekdays: 9:00-12:00 & 13:00-17:30",
+        hours: "Weekdays: 9:00-12:00 & 13:00-17:30",
         location: "CCTE 4116",
         image: "/photos/Accessibility.png",
+        introduction: "Providing reasonable accommodations for students with disabilities to ensure equal access",
       },
     ],
   },
@@ -317,6 +329,7 @@ const markers: Marker[] = [
         hours: "Weekdays: 9:00 - 21:00 Weekends: 14:00 - 21:00",
         location: "LIB 1F Information Desk",
         image: "/photos/library.png",
+        introduction: "Serving as the central hub for library inquiries and research assistance",
       },
       {
         name: "DKU Information Technology (DKU IT)",
@@ -324,6 +337,7 @@ const markers: Marker[] = [
         hours: "Weekdays: 9:00-17:30",
         location: "LIB 1F DKU IT Service Desk or AB2004",
         image: "/photos/IT.png",
+        introduction: "Providing computing and technology support for students, faculty, and staff",
       },
     ],
   },
@@ -339,6 +353,7 @@ const markers: Marker[] = [
         hours: "",
         location: "AB 2101",
         image: "/photos/WLS.png",
+        introduction: "Supporting writing and multilingual communication skills across the community",
       },
     ],
   },
@@ -352,7 +367,8 @@ const markers: Marker[] = [
         name: "Library Printer",
         description: "",
         hours: "Open 24 hours",
-        location: "\n1F Rooms 1010, 1118 – Ricoh (Color) \n2F Rooms 2022, 2120 – Ricoh (Color) \n3F Rooms 3109, 3113 – Ricoh (Color) \n4F Room 4115 – Ricoh (Color) ",
+        location:
+          "\n1F Rooms 1010, 1118 – Ricoh (Color) \n2F Rooms 2022, 2120 – Ricoh (Color) \n3F Rooms 3109, 3113 – Ricoh (Color) \n4F Room 4115 – Ricoh (Color) ",
       },
     ],
   },
@@ -366,7 +382,8 @@ const markers: Marker[] = [
         name: "Academic Building Printer",
         description: "",
         hours: "Open 24 hours",
-        location: "\n1F Across from Room 1075 – Ricoh (BW) \n2F Room 2013 – Ricoh (Color) \n2F Near Room 2A33 – Ricoh (Color) \n2F Room 2004 – Ricoh (Color) \n3F Near Room 3221 – Ricoh (Color) \n3F Near Room 3031 – Ricoh (Color) ",
+        location:
+          "\n1F Across from Room 1075 – Ricoh (BW) \n2F Room 2013 – Ricoh (Color) \n2F Near Room 2A33 – Ricoh (Color) \n2F Room 2004 – Ricoh (Color) \n3F Near Room 3221 – Ricoh (Color) \n3F Near Room 3031 – Ricoh (Color) ",
       },
     ],
   },
@@ -380,7 +397,8 @@ const markers: Marker[] = [
         name: "Conference Center Printer",
         description: "",
         hours: "Open 24 hours",
-        location: "\n1F Near Room 1071 – Ricoh (Color) \n2F Near Room 2056 – Ricoh (Color) \n2F Near Room 2095 – Ricoh (Color)  ",
+        location:
+          "\n1F Near Room 1071 – Ricoh (Color) \n2F Near Room 2056 – Ricoh (Color) \n2F Near Room 2095 – Ricoh (Color)  ",
       },
     ],
   },
@@ -408,7 +426,8 @@ const markers: Marker[] = [
         name: "Undergraduate Residence Hall Printer",
         description: "",
         hours: "Open 24 hours",
-        location: "\nA#1102, B#1001, C#1102, D#1001, E#1102, F#1001, G#1102, H#1001 – Ricoh (BW)   ",
+        location:
+          "\nA#1102, B#1001, C#1102, D#1001, E#1102, F#1001, G#1102, H#1001 – Ricoh (BW)   ",
       },
     ],
   },
@@ -436,7 +455,8 @@ const markers: Marker[] = [
         name: "Innovation Building Printer",
         description: "",
         hours: "Open 24 hours",
-        location: "\n1F West Hallway – Ricoh (Color) \n1F East Hallway – Ricoh (Color) \n2F Rooms 2016, 2031, 2062 – Ricoh (Color) \n3F Rooms 3028, 3031 (Stapler), 3088 – Ricoh (Color/BW)  ",
+        location:
+          "\n1F West Hallway – Ricoh (Color) \n1F East Hallway – Ricoh (Color) \n2F Rooms 2016, 2031, 2062 – Ricoh (Color) \n3F Rooms 3028, 3031 (Stapler), 3088 – Ricoh (Color/BW)  ",
       },
     ],
   },
@@ -450,7 +470,8 @@ const markers: Marker[] = [
         name: "Administration Building Printer",
         description: "",
         hours: "Open 24 hours",
-        location: "\n1F Rooms 1021, 1107A, 1208 – Ricoh (Color) \n2F Rooms 2003, 2203C – Ricoh (Color) \n3F Rooms 3003, 3014, 3201A – Ricoh (Color) \n4F Rooms 4003, 4201 – Ricoh (Color)  ",
+        location:
+          "\n1F Rooms 1021, 1107A, 1208 – Ricoh (Color) \n2F Rooms 2003, 2203C – Ricoh (Color) \n3F Rooms 3003, 3014, 3201A – Ricoh (Color) \n4F Rooms 4003, 4201 – Ricoh (Color)  ",
       },
     ],
   },
@@ -478,7 +499,8 @@ const markers: Marker[] = [
         name: "Community Center E Printer",
         description: "",
         hours: "Open 24 hours",
-        location: "\n1F Room 1019D – Ricoh (Color) \n4F Room 4132 – Ricoh (Color) ",
+        location:
+          "\n1F Room 1019D – Ricoh (Color) \n4F Room 4132 – Ricoh (Color) ",
       },
     ],
   },
@@ -492,7 +514,8 @@ const markers: Marker[] = [
         name: "WHU-DUKE Research Institute Printer",
         description: "",
         hours: "Open 24 hours",
-        location: "\n1F Room 1129 – Ricoh (Color) \n1F Near Room 1012– Ricoh (Color) \n2F Rooms 2129, 2212 – Ricoh (Color) \n3F Rooms 3212, 3131 (Stapler) – Ricoh (Color) ",
+        location:
+          "\n1F Room 1129 – Ricoh (Color) \n1F Near Room 1012– Ricoh (Color) \n2F Rooms 2129, 2212 – Ricoh (Color) \n3F Rooms 3212, 3131 (Stapler) – Ricoh (Color) ",
       },
     ],
   },
@@ -507,12 +530,14 @@ const markers: Marker[] = [
         description: "dku-innovation@dukekunshan.edu.cn",
         location: "IB 2F",
         image: "/photos/INE.png",
+        introduction: "Fostering creativity, social responsibility, and visionary entrepreneurship",
       },
       {
         name: "Center for Teaching and Learning",
         description: "dku_ctl@dukekunshan.edu.cn",
         location: "IB 3018",
-        image: "/photos/Teaching.png",
+        image: "/photos/learning.png",
+        introduction: "Supporting faculty with innovative, evidence-based teaching practices",
       },
     ],
   },
@@ -527,18 +552,21 @@ const markers: Marker[] = [
         description: "advising@dukekunshan.edu.cn / DKU-arc@dukekunshan.edu.cn",
         location: "ADB 1F",
         image: "/photos/Advising.png",
+        introduction: "Guiding students through the interdisciplinary DKU curriculum",
       },
       {
         name: "Office of Assessment",
         description: "dku_assessment@dukekunshan.edu.cn",
         location: "ADB 1020",
         image: "/photos/Assessment.png",
+        introduction: "Leading assessment to improve teaching, learning, and institutional effectiveness",
       },
       {
         name: "Office of the Registrar",
         description: "dku-registrar@dukekunshan.edu.cn",
         location: "ADB 1107",
         image: "/photos/Registrar.png",
+        introduction: "Managing academic records, calendars, and registration services",
       },
     ],
   },
@@ -553,6 +581,7 @@ const markers: Marker[] = [
         description: "DKU-LCC@dukekunshan.edu.cn",
         location: "CC 1070",
         image: "/photos/Language.png",
+        introduction: "Offering language courses in English, Chinese, and additional languages",
       },
     ],
   },
@@ -566,227 +595,466 @@ const markers: Marker[] = [
         name: "Residence Life",
         description: "residencelife@dukekunshan.edu.cn",
         hours: "Weekdays: 9:00-17:30",
-        location: "\nGraduate Apartments 1110 suite\nBuilding 15A 1101\nBuilding 15C 1101\nBuilding 15E 1101\nBuilding 15G 1101",
+        location:
+          "\nGraduate Apartments 1110 suite\nBuilding 15A 1101\nBuilding 15C 1101\nBuilding 15E 1101\nBuilding 15G 1101",
         image: "/photos/Residence.png",
+        introduction: "Building inclusive campus communities and managing residential life programs",
+      },
+    ],
+  },
+  {
+    id: 33,
+    type: "office",
+    top: 295,
+    left: 840,
+    items: [
+      {
+        name: "Athletes",
+        description: "sports@dukekunshan.edu.cn",
+        location: "SC 2F",
+        image: "/photos/Athletes.png",
+        introduction: "Cultivating values through sport, fitness, and wellness for student success",
       },
     ],
   },
 ];
 
-export default function CampusMap({
-  onAsk,
-}: {
-  onAsk: (reference: string) => void;
-}) {
-  const [selectedType, setSelectedType] = useState<
-    "building" | "office" | "printer"
-  >("building");
-  const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const filteredMarkers = markers.filter(
-    (m) => m.type === selectedType
-  );
-  const isBottomHalf = selectedMarker && selectedMarker.top > 350;
+const extraOfficeItems: (SubItem & { id: string })[] = [
+  {
+    id: "extra-1",
+    name: "Office of Academic Affairs",
+    description: "dku-academicaffairs@dukekunshan.edu.cn",
+    introduction: "Advancing inquiry-based teaching to prepare students for complex global challenges",
+    location: "",
+    image: "",
+  },
+  {
+    id: "extra-2",
+    name: "Institute for Global Higher Education",
+    description: "",
+    introduction: "Advancing global education through collaborative research and innovation",
+    location: "",
+    image: "",
+  },
+  {
+    id: "extra-3",
+    name: "Research Support Office",
+    description: "research-support@dukekunshan.edu.cn",
+    introduction: "Administering sponsored research projects and ensuring compliance",
+    location: "",
+    image: "",
+  },
+  {
+    id: "extra-4",
+    name: "Global Education",
+    description: "dku-globaledu@dukekunshan.edu.cn",
+    introduction: "Supporting students with study away opportunities and global learning",
+    location: "",
+    image: "",
+  },
+  {
+    id: "extra-5",
+    name: "Office of Faculty Affairs",
+    description: "dku_facultyaffairs@dukekunshan.edu.cn",
+    introduction: "Supporting faculty in scholarship, teaching, and professional growth",
+    location: "",
+    image: "",
+  },
+];
+
+
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+  return isMobile;
+};
+
+
+const MapModal = ({
+  marker,
+  itemIndex,
+  mapImage,
+  onClose,
+}: {
+  marker: Marker;
+  itemIndex: number;
+  mapImage: string;
+  onClose: () => void;
+}) => {
+  const item = marker.items[itemIndex];
+  const leftPercent = (marker.left / 1000) * 100;
+  const topPercent = (marker.top / 650) * 100;
 
   return (
-    <div className="w-full flex justify-center items-start p-8">
-      <div className="flex gap-8">
-
-        <div
-          className="relative w-[1000px] h-[650px]"
-          onClick={() => setSelectedMarker(null)}
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden"
+        style={{ width: "min(90vw, 500px)" }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-black/70 dark:bg-white/70 text-white dark:text-black flex items-center justify-center hover:bg-black dark:hover:bg-white"
         >
-
-          <div className="absolute inset-0 rounded-3xl overflow-hidden shadow-xl border">
-            <img src="/mapupdate.png" className="w-full h-full object-cover" />
+          ✕
+        </button>
+        <div className="relative w-full" style={{ aspectRatio: "1000 / 650" }}>
+          <img
+            src={mapImage}
+            className="absolute inset-0 w-full h-full object-cover"
+            alt="map"
+          />
+          <div
+            className="absolute -translate-x-1/2 -translate-y-full cursor-pointer"
+            style={{ left: `${leftPercent}%`, top: `${topPercent}%` }}
+          >
+            <img src="/pointer.png" className="w-10 h-10 drop-shadow-lg" alt="marker" />
           </div>
+        </div>
+        <div className="p-3 text-center text-gray-800 dark:text-gray-200">
+          <div className="font-semibold">{item.name}</div>
+          <div className="text-sm text-gray-600 dark:text-gray-400">
+            {item.location}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-          <div className="absolute inset-0">
+export default function CampusMap({ onAsk }: { onAsk: (reference: string) => void }) {
+  const [selectedType, setSelectedType] = useState<"building" | "office" | "printer">("building");
+  const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [mapImage, setMapImage] = useState("/mapupdate.png");
+  const [viewMode, setViewMode] = useState<"map" | "list">("map");
+  const [modalMarker, setModalMarker] = useState<{ marker: Marker; itemIndex: number } | null>(null);
+  const isMobile = useIsMobile();
+  const panelContentRef = useRef<HTMLDivElement>(null);
 
-            {filteredMarkers.map((marker) => (
-              <div
-                key={marker.id}
-                className="absolute -translate-x-1/2 -translate-y-full z-10"
-                style={{ top: marker.top, left: marker.left }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedMarker(marker);
-                  setCurrentIndex(0);
-                }}
-              >
-                <div className="relative cursor-pointer group">
-                  <img
-                    src="/pointer.png"
-                    className="
-                      relative w-15 h-15
-                      drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)]
-                      group-hover:-translate-y-1
-                      group-hover:scale-110
-                      group-hover:drop-shadow-[0_14px_24px_rgba(0,0,0,0.6)]
-                      transition-all duration-200
-                    "
-                  />
-                </div>
-              </div>
-            ))}
+  
+  useEffect(() => {
+    if (isMobile) setViewMode("list");
+  }, [isMobile]);
 
-            {selectedMarker && (
-              <div
-                className="absolute z-50 w-[320px] bg-white rounded-2xl shadow-2xl overflow-hidden"
-                onClick={(e) => e.stopPropagation()}
-                style={{
-                  top: isBottomHalf
-                    ? selectedMarker.top - 260 
-                    : selectedMarker.top,   
-                  left: selectedMarker.left + 40,
-                }}
-              >
 
+  useEffect(() => {
+    const updateMapImage = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      setMapImage(isDark ? "/dark.png" : "/mapupdate.png");
+    };
+    updateMapImage();
+    const observer = new MutationObserver(updateMapImage);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
+
+  useEffect(() => {
+    if (panelContentRef.current) {
+      panelContentRef.current.scrollTop = 0;
+    }
+  }, [currentIndex]);
+
+  const filteredMarkers = markers.filter((m) => m.type === selectedType);
+  const isBottomHalf = selectedMarker && selectedMarker.top > 350;
+
+
+  let finalListItems: any[] = [];
+
+  if (selectedType === "building" || selectedType === "printer") {
+    finalListItems = filteredMarkers.flatMap((marker) =>
+      marker.items.map((item, idx) => ({
+        ...item,
+        markerId: marker.id,
+        markerType: marker.type,
+        itemIndex: idx,
+      }))
+    );
+  } else if (selectedType === "office") {
+    const officeItems = filteredMarkers.flatMap((marker) =>
+      marker.items.map((item, idx) => ({
+        ...item,
+        markerId: marker.id,
+        markerType: marker.type,
+        itemIndex: idx,
+      }))
+    );
+    const extraItems = extraOfficeItems.map((item, idx) => ({
+      ...item,
+      markerId: -1,
+      markerType: "office" as const,
+      itemIndex: -1,
+    }));
+    const allOffices = [...officeItems, ...extraItems];
+    allOffices.sort((a, b) => a.name.localeCompare(b.name));
+    finalListItems = allOffices;
+  }
+
+  const handleViewOnMap = (markerId: number, itemIndex: number) => {
+    if (markerId === -1) return;
+    const targetMarker = markers.find((m) => m.id === markerId);
+    if (!targetMarker) return;
+    if (isMobile) {
+      setModalMarker({ marker: targetMarker, itemIndex });
+    } else {
+      setViewMode("map");
+      setSelectedMarker(targetMarker);
+      setCurrentIndex(itemIndex);
+    }
+  };
+
+
+  const FilterButtons = () => (
+    <div className="flex flex-row md:flex-col gap-3 md:gap-4 justify-center md:justify-start mt-2 md:mt-6">
+      {(["building", "office", "printer"] as const).map((type) => (
+        <button
+          key={type}
+          className={`px-3 md:px-4 py-1.5 md:py-2 rounded-xl text-sm md:text-base transition-all hover:scale-105 ${
+            selectedType === type
+              ? "bg-black dark:bg-white text-white dark:text-black shadow-lg"
+              : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600"
+          }`}
+          onClick={() => {
+            setSelectedType(type);
+            setSelectedMarker(null);
+            setCurrentIndex(0);
+          }}
+        >
+          {type === "building" ? "Buildings" : type === "office" ? "Offices" : "Printers"}
+        </button>
+      ))}
+    </div>
+  );
+
+  return (
+    <>
+      <div className="w-full flex justify-center items-start p-4 md:p-8">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-8 w-full max-w-7xl mx-auto justify-center">
+          {isMobile && <FilterButtons />}
+
+          <div className="relative w-full md:w-[1000px] h-[500px] md:h-[650px]">
+            {!isMobile && (
+              <div className="absolute top-3 left-3 z-20 flex gap-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full p-1 shadow-md border">
                 <button
-                  onClick={() => setSelectedMarker(null)}
-                  className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/70 text-white flex items-center justify-center hover:bg-black hover:scale-110 transition-all"
-                >
-                  ✕
-                </button>
-
-                {selectedMarker.items[currentIndex].image && (
-                  <img
-                    src={selectedMarker.items[currentIndex].image}
-                    className="w-full h-32 object-cover"
-                  />
-                )}
-
-                <div
-                  className={`${
-                    selectedMarker.items[currentIndex].image ? "p-4 pb-2" : "p-4"
+                  onClick={() => setViewMode("map")}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-full transition-all hover:scale-105 ${
+                    viewMode === "map"
+                      ? "bg-black dark:bg-white text-white dark:text-black shadow"
+                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
                   }`}
                 >
+                  Map
+                </button>
+                <button
+                  onClick={() => setViewMode("list")}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-full transition-all hover:scale-105 ${
+                    viewMode === "list"
+                      ? "bg-black dark:bg-white text-white dark:text-black shadow"
+                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                  }`}
+                >
+                  List
+                </button>
+              </div>
+            )}
 
-                  <div>
-                    <div className="font-semibold text-lg">
-                      {selectedMarker.items[currentIndex].name}
+            {!isMobile && viewMode === "map" && (
+              <div className="relative w-full h-full" onClick={() => setSelectedMarker(null)}>
+                <div className="absolute inset-0 rounded-3xl overflow-hidden shadow-xl border">
+                  <img src={mapImage} className="w-full h-full object-cover" />
+                </div>
+                <div className="absolute inset-0">
+                  {filteredMarkers.map((marker) => (
+                    <div
+                      key={marker.id}
+                      className="absolute -translate-x-1/2 -translate-y-full z-10 group cursor-pointer"
+                      style={{ top: marker.top, left: marker.left }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedMarker(marker);
+                        setCurrentIndex(0);
+                      }}
+                    >
+                      <img
+                        src="/pointer.png"
+                        className="relative w-10 md:w-15 h-10 md:h-15 drop-shadow-lg transition-all duration-200 group-hover:-translate-y-1 group-hover:scale-110"
+                      />
                     </div>
-
-                    <div className="text-sm text-gray-500">
-                      {selectedMarker.items[currentIndex].description}
-                    </div>
-                  </div>
-
-                  <div className="mt-4 text-sm text-gray-700 space-y-1">
-                    {selectedMarker.items[currentIndex].hours && (
-                      <div>
-                        <span className="font-medium">Open Hours:</span>{" "}
-                        {selectedMarker.items[currentIndex].hours}
-                      </div>
-                    )}
-
-                  <div className="whitespace-pre-line">
-                    <span className="font-medium">Location:</span>{" "}
-                    {selectedMarker.items[currentIndex].location}
-                  </div>
-                  </div>
-
-                  <button
-                    className="mt-4 w-full py-1.5 rounded-lg bg-black text-white hover:bg-gray-800 transition-all"
-                    onClick={() => {
-                      const item = selectedMarker!.items[currentIndex];
-                      const reference = `About ${item.name}`;
-                      onAsk(reference);
-                    }}
-                  >
-                    Ask ChatDKU about this
-                  </button>
-
-                  {/* next page */}
-                  {selectedMarker.items.length > 1 && (
-                    <div className="mt-1 mb-1 flex items-center justify-center gap-4">
-
+                  ))}
+                  {selectedMarker && (
+                    <div
+                      className="absolute z-50 w-[280px] md:w-[320px] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+                      style={{
+                        top: isBottomHalf ? selectedMarker.top - 260 : selectedMarker.top,
+                        left: selectedMarker.left + 40,
+                        maxHeight: "80vh",
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <button
-                        disabled={currentIndex === 0}
-                        onClick={() => setCurrentIndex((prev) => prev - 1)}
-                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 hover:scale-125 transition-all disabled:opacity-30"
+                        onClick={() => setSelectedMarker(null)}
+                        className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/70 dark:bg-white/70 text-white dark:text-black flex items-center justify-center hover:scale-110 z-10"
                       >
-                        ‹
+                        ✕
                       </button>
-
-                      <div className="text-sm text-gray-500">
-                        {currentIndex + 1} / {selectedMarker.items.length}
+                      <div ref={panelContentRef} className="flex-1 overflow-y-auto">
+                        {selectedMarker.items[currentIndex].image && (
+                          <img src={selectedMarker.items[currentIndex].image} className="w-full h-32 object-cover" />
+                        )}
+                        <div className={`p-4 ${selectedMarker.items[currentIndex].image ? "pb-2" : ""}`}>
+                          <div className="font-semibold text-lg">{selectedMarker.items[currentIndex].name}</div>
+                          <div className="text-sm text-gray-600 dark:text-gray-400">{selectedMarker.items[currentIndex].description}</div>
+                          {/* 地图面板中显示 introduction（仅当存在时） */}
+                          {selectedMarker.items[currentIndex].introduction && (
+                            <div className="mt-1 text-xs italic text-gray-500 dark:text-gray-400">
+                              {selectedMarker.items[currentIndex].introduction}
+                            </div>
+                          )}
+                          <div className="mt-4 text-sm space-y-1">
+                            {selectedMarker.items[currentIndex].hours && (
+                              <div><span className="font-medium">Open Hours:</span> {selectedMarker.items[currentIndex].hours}</div>
+                            )}
+                            <div className="whitespace-pre-line break-words"><span className="font-medium">Location:</span> {selectedMarker.items[currentIndex].location}</div>
+                          </div>
+                          <button
+                            className="mt-4 w-full py-1.5 rounded-lg bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-all hover:scale-105"
+                            onClick={() => onAsk(`About ${selectedMarker!.items[currentIndex].name}`)}
+                          >
+                            Ask ChatDKU about this
+                          </button>
+                        </div>
                       </div>
-
-                      <button
-                        disabled={
-                          currentIndex === selectedMarker.items.length - 1
-                        }
-                        onClick={() => setCurrentIndex((prev) => prev + 1)}
-                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 hover:scale-125 transition-all disabled:opacity-30"
-                      >
-                        ›
-                      </button>
-
+                      {selectedMarker.items.length > 1 && (
+                        <div className="flex items-center justify-center gap-4 py-2">
+                          <button
+                            disabled={currentIndex === 0}
+                            onClick={() => setCurrentIndex((p) => p - 1)}
+                            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 hover:scale-110 transition-all disabled:opacity-30 text-gray-800 dark:text-gray-200"
+                          >
+                            ‹
+                          </button>
+                          <div className="text-sm text-gray-600 dark:text-gray-400">
+                            {currentIndex + 1} / {selectedMarker.items.length}
+                          </div>
+                          <button
+                            disabled={currentIndex === selectedMarker.items.length - 1}
+                            onClick={() => setCurrentIndex((p) => p + 1)}
+                            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 hover:scale-110 transition-all disabled:opacity-30 text-gray-800 dark:text-gray-200"
+                          >
+                            ›
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
-
                 </div>
               </div>
             )}
 
+            {(viewMode === "list" || isMobile) && (
+              <div className="w-full h-full rounded-3xl overflow-y-auto bg-white dark:bg-gray-900 shadow-xl border">
+                <div className="pt-14 px-3 md:px-4 pb-4">
+                  <div className="space-y-3 md:space-y-4">
+                    {finalListItems.length === 0 ? (
+                      <div className="text-center text-gray-500 dark:text-gray-400 py-10">No {selectedType} available.</div>
+                    ) : (
+                      finalListItems.map((item, idx) => {
+                        const isBuilding = item.markerType === "building";
+                        const isOfficeOrPrinter = item.markerType === "office" || item.markerType === "printer";
+                        const hasMapMarker = item.markerId !== -1;
+
+                        return (
+                          <div key={`${item.markerId}-${idx}`} className="bg-gray-50 dark:bg-gray-800 rounded-xl p-3 md:p-4 shadow-sm">
+                            {item.image && item.markerType !== "office" && (
+                              <img src={item.image} alt={item.name} className="w-full h-28 md:h-32 object-cover rounded-lg mb-3" />
+                            )}
+                            {isBuilding ? (
+                              <>
+                                <div>
+                                  <div className="font-semibold text-base md:text-lg">{item.name}</div>
+                                  <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1">{item.description}</div>
+                                  <div className="mt-2 md:mt-3 text-xs md:text-sm space-y-1">
+                                    {item.hours && <div><span className="font-medium">Open Hours:</span> {item.hours}</div>}
+                                    <div className="whitespace-pre-line break-words"><span className="font-medium">Location:</span> {item.location}</div>
+                                  </div>
+                                </div>
+                                <button
+                                  className="mt-3 md:mt-4 w-full py-1.5 text-sm rounded-lg bg-black dark:bg-white text-white dark:text-black transition-all hover:scale-105 hover:bg-gray-800 dark:hover:bg-gray-200"
+                                  onClick={() => handleViewOnMap(item.markerId, item.itemIndex)}
+                                >
+                                  View it on the map
+                                </button>
+                              </>
+                            ) : isOfficeOrPrinter ? (
+                              <div className="flex flex-col sm:flex-row gap-3">
+                                <div className="flex-1 min-w-0 break-words">
+                                  <div className="font-semibold text-base md:text-lg">{item.name}</div>
+                                  <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                    {item.description}
+                                  </div>
+                                  {item.introduction && (
+                                    <div className="mt-1 text-xs italic text-gray-500 dark:text-gray-400">
+                                      {item.introduction}
+                                    </div>
+                                  )}
+                                  <div className="mt-2 md:mt-3 text-xs md:text-sm space-y-1">
+                                    {item.hours && (
+                                      <div>
+                                        <span className="font-medium">Open Hours:</span> {item.hours}
+                                      </div>
+                                    )}
+                                    {hasMapMarker && item.location && (
+                                      <div className="whitespace-pre-line break-words">
+                                        <span className="font-medium">Location:</span> {item.location}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="flex flex-row sm:flex-col justify-start sm:justify-center gap-2 sm:gap-3 flex-shrink-0">
+                                  <button
+                                    className="px-3 md:px-4 py-1.5 text-xs md:text-sm rounded-lg bg-black dark:bg-white text-white dark:text-black whitespace-nowrap transition-all hover:scale-105 hover:bg-gray-800 dark:hover:bg-gray-200"
+                                    onClick={() => onAsk(`About ${item.name}`)}
+                                  >
+                                    Ask ChatDKU
+                                  </button>
+                                  {hasMapMarker && (
+                                    <button
+                                      className="px-3 md:px-4 py-1.5 text-xs md:text-sm rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 whitespace-nowrap transition-all hover:scale-105 hover:bg-gray-300 dark:hover:bg-gray-600"
+                                      onClick={() => handleViewOnMap(item.markerId, item.itemIndex)}
+                                    >
+                                      View on map
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            ) : null}
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
+
+          {!isMobile && <FilterButtons />}
         </div>
-
-        <div className="flex flex-col gap-4 mt-6">
-
-          <button
-            className={`px-4 py-2 rounded-xl transition-all hover:scale-105
-            ${
-              selectedType === "building"
-                ? "bg-black text-white shadow-lg"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-            onClick={() => {
-              setSelectedType("building");
-              setSelectedMarker(null);
-              setCurrentIndex(0);
-            }}
-          >
-            Buildings
-          </button>
-
-          <button
-            className={`px-4 py-2 rounded-xl transition-all hover:scale-105
-            ${
-              selectedType === "office"
-                ? "bg-black text-white shadow-lg"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-            onClick={() => {
-              setSelectedType("office");
-              setSelectedMarker(null);
-              setCurrentIndex(0);
-            }}
-          >
-            Offices
-          </button>
-
-          <button
-            className={`px-4 py-2 rounded-xl transition-all hover:scale-105
-            ${
-              selectedType === "printer"
-                ? "bg-black text-white shadow-lg"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-            onClick={() => {
-              setSelectedType("printer");
-              setSelectedMarker(null);
-              setCurrentIndex(0);
-            }}
-          >
-            Printers
-          </button>
-
-        </div>
-
       </div>
-    </div>
+
+      {isMobile && modalMarker && (
+        <MapModal marker={modalMarker.marker} itemIndex={modalMarker.itemIndex} mapImage={mapImage} onClose={() => setModalMarker(null)} />
+      )}
+    </>
   );
 }
