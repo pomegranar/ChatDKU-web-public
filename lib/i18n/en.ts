@@ -228,52 +228,6 @@ const en = {
 	"team.alumni": "Alumni",
 	"team.showMore": "Show more",
 	"team.showLess": "Show less",
-
-	// Prompt recommendations
-	"prompts.0": "What majors are available at Duke Kunshan University?",
-	"prompts.1":
-		"What are the English requirements and accepted tests for gsi applicants?",
-	"prompts.2": "Is TOEFL or IELTS required or optional for gsi admission?",
-	"prompts.3": "What is the class size for each gsi program?",
-	"prompts.4": "How and when are gsi admission results released?",
-	"prompts.5":
-		"What costs are covered by gsi tuition, and what are not included?",
-	"prompts.6": "Are there scholarships or financial aid options for gsi?",
-	"prompts.7":
-		"What are the application fee, deposit, and payment rules for gsi?",
-	"prompts.8": "Tell me about the liberal arts curriculum.",
-	"prompts.9": "What is Duke Kunshan University and what makes it unique?",
-	"prompts.10": "Can I switch my major later on? How?",
-	"prompts.11":
-		"Who are the current leadership members of Duke Kunshan University and what roles do they hold?",
-	"prompts.12": "What are the courses of Applied Mathematics?",
-	"prompts.13":
-		"Who are the members of the Duke Kunshan University board of trustees?",
-	"prompts.14": "Tell me about study abroad opportunities.",
-	"prompts.15":
-		"What responsibilities does the board of trustees have at Duke Kunshan University?",
-	"prompts.16":
-		"What resources are available for mental health support at DKU?",
-	"prompts.17":
-		"What scholarships and grants are available, and what are the eligibility criteria?",
-	"prompts.18": "What is the process for applying for financial aid?",
-	"prompts.19":
-		"What are the resources for students interested in entrepreneurship?",
-	"prompts.20": "Are there recreational and fitness facilities on campus?",
-	"prompts.21": "What health services are provided on campus?",
-	"prompts.22": "What is Common Core?",
-	"prompts.23": "How many credits can I take in a semester?",
-	"prompts.24":
-		"Can I repeat a course in which the grade of the record is CR/NC?",
-	"prompts.25": "What is the process for major declaration?",
-	"prompts.26": "When can I declare a major?",
-	"prompts.27": "Can I request a Leave of Absence for military service?",
-	"prompts.28": "How do I request a Medical Leave of Absence?",
-	"prompts.29":
-		"Who should I consult if I have concerns related to my registration?",
-	"prompts.30": "How many credits can I transfer from Study Abroad?",
-	"prompts.31":
-		"What is the scoring standard for NSPHST and graduation requirement?",
 } as const;
 
 export default en;

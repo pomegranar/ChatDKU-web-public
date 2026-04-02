@@ -3,31 +3,27 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/language-provider";
-import type { DictionaryKey } from "@/lib/i18n";
+import {
+	promptsEn,
+	promptsZh,
+	pickRandomPrompts,
+} from "@/lib/prompt-recommendations";
 
 interface PromptRecsProps {
 	onPromptSelect: (prompt: string) => void;
 	onSubmit?: () => void;
 }
 
-const promptIcons = [
-	"📚", "✅", "🇬", "🏫", "⏰", "💰", "🧧", "💳", "🌟", "💫",
-	"📝", "💡", "📊", "🙋", "✈", "🏠", "🧠", "🎓", "💰", "🚀",
-	"🏋", "🏥", "🎯", "📊", "🔁", "📑", "📅", "🎖", "🏥", "👨",
-	"✈", "🎯",
-];
-
-const PROMPT_COUNT = 32;
-
 export function PromptRecs({ onPromptSelect, onSubmit }: PromptRecsProps) {
-	const { t } = useLanguage();
-	const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
+	const { language } = useLanguage();
+	const [selected, setSelected] = useState<{ icon: string; text: string }[]>(
+		[],
+	);
 
 	useEffect(() => {
-		const indices = Array.from({ length: PROMPT_COUNT }, (_, i) => i);
-		const shuffled = indices.sort(() => Math.random() - 0.5);
-		setSelectedIndices(shuffled.slice(0, 3));
-	}, []);
+		const prompts = language === "zh" ? promptsZh : promptsEn;
+		setSelected(pickRandomPrompts(prompts, 3));
+	}, [language]);
 
 	const handlePromptClick = (promptText: string) => {
 		onPromptSelect(promptText);
@@ -49,7 +45,6 @@ export function PromptRecs({ onPromptSelect, onSubmit }: PromptRecsProps) {
 				});
 
 				lastInput.dispatchEvent(enterEvent);
-				console.log("Enter key event dispatched on input");
 			}
 
 			const sendButton = document.querySelector(
@@ -57,33 +52,27 @@ export function PromptRecs({ onPromptSelect, onSubmit }: PromptRecsProps) {
 			);
 			if (sendButton instanceof HTMLElement) {
 				sendButton.click();
-				console.log("Send button clicked");
 			}
 
 			if (onSubmit) {
 				onSubmit();
-				console.log("onSubmit called");
 			}
 		}, 10);
 	};
 
 	return (
 		<div className="flex flex-col sm:flex-row gap-2 pt-2 justify-center w-full mx-auto">
-			{selectedIndices.map((idx) => {
-				const text = t(`prompts.${idx}` as DictionaryKey);
-				const icon = promptIcons[idx] || "💬";
-				return (
-					<Button
-						key={`${idx}-${text}`}
-						variant="outline"
-						className="flex items-center shadow-none gap-2 px-4 py-2 text-xs rounded-3xl transition-colors w-full md:max-w-[280px] sm:max-w-[230px] h-auto whitespace-normal"
-						onClick={() => handlePromptClick(text)}
-					>
-						<span className="text-lg flex-shrink-0">{icon}</span>
-						<span className="text-left break-words">{text}</span>
-					</Button>
-				);
-			})}
+			{selected.map((prompt, i) => (
+				<Button
+					key={`${i}-${prompt.text}`}
+					variant="outline"
+					className="flex items-center shadow-none gap-2 px-4 py-2 text-xs rounded-3xl transition-colors w-full md:max-w-[280px] sm:max-w-[230px] h-auto whitespace-normal"
+					onClick={() => handlePromptClick(prompt.text)}
+				>
+					<span className="text-lg flex-shrink-0">{prompt.icon}</span>
+					<span className="text-left break-words">{prompt.text}</span>
+				</Button>
+			))}
 		</div>
 	);
 }
