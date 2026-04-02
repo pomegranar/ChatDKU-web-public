@@ -61,7 +61,6 @@ export function AIInput({
   );
 
   useEffect(() => {
-    // Check if running in browser and if media devices are supported
     if (typeof window !== "undefined") {
       if (!navigator?.mediaDevices?.getUserMedia) {
         console.warn("Media Devices API not supported in this browser");
@@ -149,7 +148,6 @@ export function AIInput({
         }
       };
 
-      // Handle transcription responses
       socketRef.current.on("audio_transcribed", (data: { text: string }) => {
         setInputValue(data.text);
       });
@@ -180,7 +178,6 @@ export function AIInput({
     audioChunksRef.current = [];
   };
 
-  // Listen for external value changes through the input event
   useEffect(() => {
     const textarea = textareaRef.current;
     if (!textarea) return;
@@ -252,7 +249,7 @@ export function AIInput({
         </style>
 
         <div className="flex flex-col">
-          {/* Reference 标签（你的地图功能，必须保留）*/}
+          {/* Reference 标签（你的地图功能）*/}
           {activeReference && (
             <div className="flex items-center justify-between 
                             bg-gray-200/80 dark:bg-gray-700/80 
@@ -270,7 +267,7 @@ export function AIInput({
             </div>
           )}
 
-          {/* 输入框 + 按钮（学长最新代码）*/}
+          {/* 输入框 + 按钮 */}
           <div className="flex flex-row items-center">
             <Textarea
               autoFocus
@@ -282,9 +279,12 @@ export function AIInput({
                 "overflow-y-auto resize-none",
                 "focus-visible:ring-0 focus-visible:ring-offset-0",
                 "pt-2 border-none bg-transparent",
-                `min-h-[${minHeight}px] max-h-[${maxHeight}px]`,
                 "[&::-webkit-resizer]:hidden",
               )}
+              style={{
+                minHeight: `${minHeight}px`,
+                maxHeight: `${maxHeight}px`,
+              }}
               ref={textareaRef}
               value={inputValue}
               onChange={(e) => {
@@ -310,7 +310,7 @@ export function AIInput({
               }}
               disabled={disabled}
             />
-            
+
             <div>
               <button
                 className={cn(
@@ -330,7 +330,7 @@ export function AIInput({
                 type="button"
                 className={cn(
                   inputButtonStyle,
-                  !inputValue ? "opacity-0 scale-50" : "opacity-100 scale-100",
+                  inputValue ? "opacity-100 scale-100" : "hidden opacity-0 scale-50",
                 )}
                 disabled={disabled || submitDisabled}
               >
