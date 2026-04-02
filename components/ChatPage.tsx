@@ -400,7 +400,7 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
     `;
 		chatLog?.appendChild(messageElement);
 		chatLog?.scrollTo(0, chatLog.scrollHeight);
-		return messageElement.querySelector(".flex.flex.col");
+		return messageElement.querySelector(".flex.flex-col");
 	}, []);
 
 	return (
