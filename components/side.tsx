@@ -221,9 +221,7 @@ export default function Side({
 							</div>
 							<TooltipProvider>
 								<Tooltip>
-									<TooltipContent>
-										{t("side.historyDisabled")}
-									</TooltipContent>
+									<TooltipContent>{t("side.historyDisabled")}</TooltipContent>
 									<TooltipTrigger className="text-left opacity-50 cursor-not-allowed">
 										<div>
 											<p className="ml-2 mt-4 text-sm text-muted-foreground">

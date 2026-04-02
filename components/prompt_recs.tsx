@@ -22,7 +22,7 @@ export function PromptRecs({ onPromptSelect, onSubmit }: PromptRecsProps) {
 
 	useEffect(() => {
 		const prompts = language === "zh" ? promptsZh : promptsEn;
-		setSelected(pickRandomPrompts(prompts, 3));
+		setSelected(pickRandomPrompts(prompts, 5));
 	}, [language]);
 
 	const handlePromptClick = (promptText: string) => {
@@ -61,12 +61,12 @@ export function PromptRecs({ onPromptSelect, onSubmit }: PromptRecsProps) {
 	};
 
 	return (
-		<div className="flex flex-col sm:flex-row gap-2 pt-2 justify-center w-full mx-auto">
+		<div className="space-x-1 space-y-1 pt-2 text-center justify-center max-w-4xl mx-auto">
 			{selected.map((prompt, i) => (
 				<Button
 					key={`${i}-${prompt.text}`}
 					variant="outline"
-					className="flex items-center shadow-none gap-2 px-4 py-2 text-xs rounded-3xl transition-colors w-full md:max-w-[280px] sm:max-w-[230px] h-auto whitespace-normal"
+					className="inline-flex flex-row items-center text-left shadow-none gap-2 px-4 py-2 text-xs rounded-3xl transition-colors max-w-[280px] h-auto whitespace-normal"
 					onClick={() => handlePromptClick(prompt.text)}
 				>
 					<span className="text-lg flex-shrink-0">{prompt.icon}</span>
