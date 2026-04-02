@@ -2,10 +2,10 @@ const zh = {
   // Navbar
   "navbar.about": "关于",
   "navbar.dev": "开发",
-  "navbar.preview": "预览",
+  "navbar.preview": "示范",
 
   // Back button
-  "back": "返回",
+  back: "返回",
 
   // Home page - Navbar
   "home.nav.stack": "技术栈",
@@ -19,7 +19,8 @@ const zh = {
   "home.hero.title1": "大学知识，",
   "home.hero.title2": "尽在一处。",
   "home.hero.subtitle.prefix": "",
-  "home.hero.subtitle": "是一款智能AI助手，能够准确、私密、即时地回答您所有关于DKU的问题。",
+  "home.hero.subtitle":
+    "是一款智能AI助手，能够准确、私密、即时地回答您所有关于DKU的问题。",
   "home.hero.cta": "打开 ChatDKU",
   "home.hero.broughtBy": "由以下团队倾力打造",
   "home.hero.watchYouTube": "在 YouTube 上观看",
@@ -41,14 +42,17 @@ const zh = {
   // Home page - Solution
   "home.solution.badge": "解决方案",
   "home.solution.title": "一个真正了解DKU的AI。",
-  "home.solution.desc": "与通用聊天机器人不同，ChatDKU基于DKU官方资料构建。包括政策、截止日期、课程、公告——全部部署在DKU基础设施上。",
+  "home.solution.desc":
+    "与通用聊天机器人不同，ChatDKU基于DKU官方资料构建。包括政策、截止日期、课程、公告——全部部署在DKU基础设施上。",
   "home.solution.privacy": "完全本地部署，您的查询不会离开DKU内部网络。",
   "home.solution.sources": "基于官方最新DKU资料，而非公共互联网。",
   "home.solution.audience": "为学生、教师和员工而构建。",
   "home.solution.demo.you": "你",
   "home.solution.demo.question": "我什么时候可以申报专业？",
-  "home.solution.demo.answer": "您可以在昆山杜克大学<b>大二春季学期</b>申报专业。<br/>在申报之前，您应该与学术导师一起制定与您意向专业一致的长期学术计划。<br/>建议在大一期间探索不同的专业选项，以做出明智的决定。如需更多信息，请咨询本科生学术指导办公室或查阅DKU本科生手册。",
-  "home.solution.demo.ref": "参考来源：<br/>• DKU本科生手册（第52页）<br/>• 学术指导常见问题（2024年12月19日更新）（第5页）",
+  "home.solution.demo.answer":
+    "您可以在昆山杜克大学<b>大二春季学期</b>申报专业。<br/>在申报之前，您应该与学术导师一起制定与您意向专业一致的长期学术计划。<br/>建议在大一期间探索不同的专业选项，以做出明智的决定。如需更多信息，请咨询本科生学术指导办公室或查阅DKU本科生手册。",
+  "home.solution.demo.ref":
+    "参考来源：<br/>• DKU本科生手册（第52页）<br/>• 学术指导常见问题（2024年12月19日更新）（第5页）",
 
   // Home page - Architecture
   "home.arch.badge": "技术架构",
@@ -59,10 +63,13 @@ const zh = {
   "home.arch.layer2": "安全后端",
   "home.arch.layer2.desc": "Duke NetID 身份验证、安全路由和请求处理。",
   "home.arch.layer3": "智能RAG核心",
-  "home.arch.layer3.desc": "ChatDKU 采用先进的AI技术，包括响应规划、混合检索机制、推理、综合和记忆。",
+  "home.arch.layer3.desc":
+    "ChatDKU 采用先进的AI技术，包括响应规划、混合检索机制、推理、综合和记忆。",
   "home.arch.layer4": "知识库",
-  "home.arch.layer4.desc": "来自各类DKU文档的专属信息，以向量嵌入和关系数据库形式存储。",
-  "home.arch.footer": "我们使用离线数据摄取管道来解析DKU官方资料，将其分块进行向量嵌入，构建高效的可搜索索引。在查询时，",
+  "home.arch.layer4.desc":
+    "来自各类DKU文档的专属信息，以向量嵌入和关系数据库形式存储。",
+  "home.arch.footer":
+    "我们使用离线数据摄取管道来解析DKU官方资料，将其分块进行向量嵌入，构建高效的可搜索索引。在查询时，",
   "home.arch.footerBold": "向量搜索 + 关键词搜索 + 重排序",
   "home.arch.footerEnd": "确保每个回答都基于真实的校园信息。",
 
@@ -80,15 +87,19 @@ const zh = {
   "home.agent.step4.desc": "如果不充分，重写查询并再次检索",
   "home.agent.step5": "综合",
   "home.agent.step5.desc": "生成带引用的答案",
-  "home.agent.footer1": "如果检索到的上下文不够充分，系统会重写查询并在生成之前再次检索。",
+  "home.agent.footer1":
+    "如果检索到的上下文不够充分，系统会重写查询并在生成之前再次检索。",
   "home.agent.footerBold": "不产生幻觉，不猜测。",
-  "home.agent.footer2": "只有当证据通过充分性检查后，综合器才会生成最终回答，并附带引用供人工审核。",
+  "home.agent.footer2":
+    "只有当证据通过充分性检查后，综合器才会生成最终回答，并附带引用供人工审核。",
 
   // Home page - SeekBench
   "home.seekbench.badge": "评估",
   "home.seekbench.title": "不仅仅是一个回答机器。",
-  "home.seekbench.desc1": "SeekBench 是贯穿整个管道的评估框架——不仅评估最终答案，还评估检索质量和中间推理决策。",
-  "home.seekbench.desc2": "这让我们能够精确定位管道中需要改进的地方，使 ChatDKU 成为一个",
+  "home.seekbench.desc1":
+    "SeekBench 是贯穿整个管道的评估框架——不仅评估最终答案，还评估检索质量和中间推理决策。",
+  "home.seekbench.desc2":
+    "这让我们能够精确定位管道中需要改进的地方，使 ChatDKU 成为一个",
   "home.seekbench.desc2Bold": "可持续改进的系统",
   "home.seekbench.desc2End": "，由真实评估和用户反馈驱动。",
   "home.seekbench.metric1": "检索质量",
@@ -113,7 +124,8 @@ const zh = {
 
   // Home page - CTA
   "home.cta.title": "准备好提出您的第一个问题了吗？",
-  "home.cta.desc": "ChatDKU 面向所有DKU学生、教师和员工开放——免费、快速且私密。",
+  "home.cta.desc":
+    "ChatDKU 面向所有DKU学生、教师和员工开放——免费、快速且私密。",
   "home.cta.button": "开始使用",
 
   // Home page - Footer
@@ -157,15 +169,21 @@ const zh = {
   "chat.feedbackCustomRequired": "请填写内容！",
   "chat.feedbackSubmit": "提交",
   "chat.feedbackCancel": "取消",
-  "chat.disclaimer": "AI回答可能包含错误。如有不明之处，请向您的导师和/或学术服务部门核实。",
+  "chat.disclaimer":
+    "AI回答可能包含错误。如有不明之处，请向您的导师和/或学术服务部门核实。",
 
   // About page / component
   "about.title": "关于 ChatDKU",
-  "about.point1": "ChatDKU 是昆山杜克大学专属的AI聊天机器人，旨在简化校园信息获取，提升学生、教师和员工的参与度。ChatDKU 能够即时、可靠地回答DKU相关问题——节省时间，简化大学生活。ChatDKU 的独特之处在于本地部署，确保数据隐私和安全。",
-  "about.point2": "ChatDKU-Student 并非学术导师会议或相关办公室沟通的替代品。它是一个提供关于DKU政策的快速、准确答案的工具，但如果您要根据政策采取行动，请务必跟进相关大学工作人员。",
-  "about.point3": "所有AI系统都可能因各种原因出错。虽然此平台的开发者会尽一切努力使其尽可能准确，但用户有责任核实系统提供的任何答案的准确性。如果用户因系统提供的答案而错过截止日期或未采取行动，责任在于用户而非 ChatDKU。系统提供的回答截图不能作为要求例外处理本科生手册中政策或学术日历中截止日期的理由。",
-  "about.point4": "为提高答案准确性，请确保您的问题包含具体且详细的关键词，以避免误解或错误解读。",
-  "about.developedBy": "由DKU边缘智能实验室开发，与IGHE SET实验室和本科生学术指导办公室合作。",
+  "about.point1":
+    "ChatDKU 是昆山杜克大学专属的AI聊天机器人，旨在简化校园信息获取，提升学生、教师和员工的参与度。ChatDKU 能够即时、可靠地回答DKU相关问题——节省时间，简化大学生活。ChatDKU 的独特之处在于本地部署，确保数据隐私和安全。",
+  "about.point2":
+    "ChatDKU-Student 并非学术导师会议或相关办公室沟通的替代品。它是一个提供关于DKU政策的快速、准确答案的工具，但如果您要根据政策采取行动，请务必跟进相关大学工作人员。",
+  "about.point3":
+    "所有AI系统都可能因各种原因出错。虽然此平台的开发者会尽一切努力使其尽可能准确，但用户有责任核实系统提供的任何答案的准确性。如果用户因系统提供的答案而错过截止日期或未采取行动，责任在于用户而非 ChatDKU。系统提供的回答截图不能作为要求例外处理本科生手册中政策或学术日历中截止日期的理由。",
+  "about.point4":
+    "为提高答案准确性，请确保您的问题包含具体且详细的关键词，以避免误解或错误解读。",
+  "about.developedBy":
+    "由DKU边缘智能实验室开发，与IGHE SET实验室和本科生学术指导办公室合作。",
   "about.guidebook": "获取指南手册",
   "about.credits": "制作团队",
 
