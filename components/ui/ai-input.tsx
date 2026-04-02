@@ -22,6 +22,7 @@ export function AIInput({
   disabled = false,
   activeReference,
   onClearReference,
+  submitDisabled = false,
 }: {
   id?: string;
   placeholder?: string;
@@ -38,6 +39,7 @@ export function AIInput({
   disabled?: boolean;
   activeReference?: string | null;
   onClearReference?: () => void;
+  submitDisabled?: boolean;
 }) {
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({
     minHeight,
@@ -206,6 +208,7 @@ export function AIInput({
 
   const handleReset = () => {
     if (disabled) return;
+    if (submitDisabled) return;
     if (!inputValue.trim()) return;
     onSubmit?.(inputValue);
     setInputValue("");
@@ -249,18 +252,15 @@ export function AIInput({
         </style>
 
         <div className="flex flex-col">
-
-          {/* Reference*/}
+          {/* Reference 标签（你的地图功能，必须保留）*/}
           {activeReference && (
             <div className="flex items-center justify-between 
                             bg-gray-200/80 dark:bg-gray-700/80 
                             text-gray-800 dark:text-gray-100 
                             px-3 py-1 rounded-full mb-2 mx-2 mt-2">
-
               <span className="text-sm truncate pr-2">
                 {activeReference}
               </span>
-
               <button
                 className="text-black dark:text-white text-sm flex-shrink-0"
                 onClick={onClearReference}
@@ -270,7 +270,7 @@ export function AIInput({
             </div>
           )}
 
-          {/* input area */}
+          {/* 输入框 + 按钮（学长最新代码）*/}
           <div className="flex flex-row items-center">
             <Textarea
               autoFocus
@@ -281,7 +281,7 @@ export function AIInput({
                 "text-black dark:text-white text-wrap",
                 "overflow-y-auto resize-none",
                 "focus-visible:ring-0 focus-visible:ring-offset-0",
-                "pt-3 pb-2 border-none bg-transparent",
+                "pt-2 border-none bg-transparent",
                 `min-h-[${minHeight}px] max-h-[${maxHeight}px]`,
                 "[&::-webkit-resizer]:hidden",
               )}
@@ -300,26 +300,29 @@ export function AIInput({
               }}
               onKeyDown={(e) => {
                 if (disabled) return;
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleReset();
+                if (e.key !== "Enter") return;
+                if (e.ctrlKey || e.metaKey || e.shiftKey) {
+                  return;
                 }
+                e.preventDefault();
+                if (submitDisabled) return;
+                handleReset();
               }}
               disabled={disabled}
             />
-
+            
             <div>
               <button
                 className={cn(
                   inputButtonStyle,
                   inputValue && "hidden",
                   isRecording &&
-                    "bg-red-500 border border-foreground/10 text-secondary",
+                    "bg-red-500 border border-foreground/10 hover:mask-bg-secondary/50 text-secondary",
                 )}
                 onClick={toggleRecording}
                 disabled={disabled}
               >
-                <Mic className="w-5 h-5" />
+                <Mic className="cursor-pointer w-5 h-5" />
               </button>
 
               <button
@@ -327,17 +330,14 @@ export function AIInput({
                 type="button"
                 className={cn(
                   inputButtonStyle,
-                  inputValue
-                    ? "opacity-100 scale-100"
-                    : "hidden opacity-0 scale-50",
+                  !inputValue ? "opacity-0 scale-50" : "opacity-100 scale-100",
                 )}
-                disabled={disabled}
+                disabled={disabled || submitDisabled}
               >
                 <CornerRightUp className="w-5 h-5" />
               </button>
             </div>
           </div>
-
         </div>
       </div>
     </div>

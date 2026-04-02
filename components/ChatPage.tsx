@@ -34,7 +34,7 @@ const configureMarked = () => {
 
 const parseMarkdown = (content: string): string => {
 	if (!content) return "";
-	const cleanedContent = content.replace(/<think>[\s\S]*?<\/think>/gi, "");
+	const cleanedContent = content.replace(/[\s\S]*?<\/think>/gi, "");
 	const parsed = marked.parse(cleanedContent) as any;
 	if (typeof parsed?.then === "function") {
 		return cleanedContent;
@@ -85,7 +85,7 @@ const getSearchLoaderHTML = (): string => {
 	const compass =
 		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="absolute inset-0 icon-cycle icon-3"><circle cx="12" cy="12" r="10"/><path d="m16 8-4 8-4-4 8-4Z"/></svg>';
 	const radar =
-		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="absolute inset-0 icon-cycle icon-4"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M22 12a10 10 0 1 1-10-10"/><path d="M14.31 8.69 21 2"/><circle cx="12" cy="12" r="0.5"/></svg>';
+		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="absolute inset-0 icon-cycle icon-4"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M22 12a10 10 0 1 1-10-10"/><path d="M14.31 8.69 21 2"/><circle cx="12" cy="12" r="0.5"/></svg>';
 	const sparkles =
 		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="absolute inset-0 icon-cycle icon-5"><path d="M12 3l1.9 3.9L18 9l-4.1 2.1L12 15l-1.9-3.9L6 9l4.1-2.1Z"/><path d="M20 17l.95 1.95L23 20l-1.95.95L20 23l-.95-2.05L17 20l2.05-.95Z"/><path d="M4 17l.95 1.95L7 20l-1.95.95L4 23l-.95-2.05L1 20l2.05-.95Z"/></svg>';
 
@@ -124,7 +124,6 @@ const streamFromReader = async (
 		const decoder = new TextDecoder();
 		let firstChunk = true;
 
-		// Clear any existing content in the container
 		elementContainer.innerHTML = "";
 
 		const contentDiv = document.createElement("div");
@@ -142,16 +141,15 @@ const streamFromReader = async (
 			}
 
 			accumulated += decoder.decode(value, { stream: true });
-			const cleaned = accumulated.replace(/<think>[\s\S]*?<\/think>/gi, "");
+			const cleaned = accumulated.replace(/[\s\S]*?<\/think>/gi, "");
 			contentDiv.innerHTML = parseMarkdown(cleaned);
 
 			const chatLog = document.getElementById("chat-log");
 			chatLog?.scrollTo(0, chatLog.scrollHeight);
 		}
 
-		// Flush remaining bytes
 		accumulated += decoder.decode();
-		const cleaned = accumulated.replace(/<think>[\s\S]*?<\/think>/gi, "");
+		const cleaned = accumulated.replace(/[\s\S]*?<\/think>/gi, "");
 		contentDiv.innerHTML = parseMarkdown(cleaned);
 
 		return { success: true, text: accumulated };
@@ -166,9 +164,8 @@ const streamText = async (
 	elementContainer: HTMLElement,
 	chunkDelayMs = 60,
 ) => {
-	const cleanedText = text.replace(/<think>[\s\S]*?<\/think>/gi, "");
+	const cleanedText = text.replace(/[\s\S]*?<\/think>/gi, "");
 
-	// Ensure streaming styles exist (fade-in)
 	if (!document.getElementById("stream-style")) {
 		const style = document.createElement("style");
 		style.id = "stream-style";
@@ -184,7 +181,6 @@ const streamText = async (
 		"text-foreground  break-words overflow-wrap-anywhere markdown-content text-[0.9375rem]";
 	elementContainer.appendChild(streamContainer);
 
-	// Prefer paragraph chunks; fallback to sentences if only one paragraph
 	const paragraphs = cleanedText
 		.split(/\n{2,}/)
 		.map((s) => s.trim())
@@ -200,7 +196,6 @@ const streamText = async (
 		chunks = sentences.map((s) => s.trim()).filter((s) => s.length > 0);
 	}
 
-	// Stream each chunk as parsed markdown with a quick fade-in
 	for (const chunk of chunks) {
 		const chunkHTML = parseMarkdown(chunk);
 		const chunkDiv = document.createElement("div");
@@ -208,7 +203,6 @@ const streamText = async (
 		chunkDiv.innerHTML = chunkHTML;
 		streamContainer.appendChild(chunkDiv);
 
-		// trigger transition
 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		chunkDiv.offsetHeight;
 		requestAnimationFrame(() => {
@@ -230,6 +224,7 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 	const [searchMode, setSearchMode] = useState("");
 	const [inputValue, setInputValue] = useState("");
 	const [apiEndpoint, setApiEndpoint] = useState(getStoredEndpoint());
+	const [isAwaitingResponse, setIsAwaitingResponse] = useState(false);
 	const router = useRouter();
 	const [showDocumentManager, setShowDocumentManager] = useState(false);
 	const [isSessionLoading, setIsSessionLoading] = useState(true);
@@ -304,6 +299,9 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 		: sessionError
 			? "Session unavailable. Please try again."
 			: "Type your message...";
+	const inputPlaceholder = isAwaitingResponse
+		? "Waiting for the response..."
+		: sessionPlaceholder;
 
 	const handleFeedback = useCallback(
 		async (userInput: any, answer: any, reason: any) => {
@@ -386,7 +384,6 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 		[isDev],
 	);
 
-	// Inserts a special assistant message rendered from raw HTML (no markdown parsing)
 	const addAssistantRawHtml = useCallback((html: string, className: string) => {
 		const chatLog = document.getElementById("chat-log");
 		const messageElement = document.createElement("div");
@@ -403,7 +400,7 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
     `;
 		chatLog?.appendChild(messageElement);
 		chatLog?.scrollTo(0, chatLog.scrollHeight);
-		return messageElement.querySelector(".flex.flex-col");
+		return messageElement.querySelector(".flex.flex.col");
 	}, []);
 
 	return (
@@ -537,8 +534,9 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 					
 					<div>
 						<AIInput
-							disabled={!isSessionReady}
-							placeholder={sessionPlaceholder}
+							disabled={false}
+							submitDisabled={!isSessionReady || isAwaitingResponse}
+							placeholder={inputPlaceholder}
 							thinkingMode={thinkingMode}
 							onThinkingModeChange={(value) => setThinkingMode(value)}
 							searchMode={searchMode}
@@ -548,48 +546,51 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 							onInputChange={(value) => setInputValue(value)}
 							onEndpointChange={setApiEndpoint}
 							activeReference={activeReference}
-  							onClearReference={() => setActiveReference(null)}
+							onClearReference={() => setActiveReference(null)}
 							onSubmit={async (value) => {
 								if (!value.trim()) return;
 
+								// 你的地图功能：保留 reference 拼接
 								let finalValue = value.trim();
 								if (activeReference) {
 									finalValue = `${activeReference}, ${finalValue}`;
 									setActiveReference(null);
 								}
 
-								setShowStarter(false);
-								setIsChatboxCentered(false);
-
-								const activeSessionId =
-									currentSessionId || getCurrentSessionId() || "";
-								if (!activeSessionId) {
-									setSessionError(
-										"We couldn't find an active chat session. Please try again.",
-									);
-									return;
-								}
-
-								if (currentSessionId !== activeSessionId) {
-									setCurrentSessionId(activeSessionId);
-								}
-								if (chatHistoryId !== activeSessionId) {
-									setChatHistoryId(activeSessionId);
-								}
-
-								addMessageToChat(
-									"user",
-									finalValue,
-									"bg-muted/50 dark:bg-muted/50 text-sm",
-								);
-
-								ensureSearchLoaderStyles();
-								const botMessage = addAssistantRawHtml(
-									getSearchLoaderHTML(),
-									"text-sm",
-								);
+								// 学长逻辑：防重复提交
+								if (isAwaitingResponse) return;
+								setIsAwaitingResponse(true);
+								let botMessage: HTMLElement | null = null;
 
 								try {
+									setShowStarter(false);
+									setIsChatboxCentered(false);
+
+									const activeSessionId = currentSessionId || getCurrentSessionId() || "";
+									if (!activeSessionId) {
+										setSessionError("We couldn't find an active chat session. Please try again.");
+										return;
+									}
+
+									if (currentSessionId !== activeSessionId) {
+										setCurrentSessionId(activeSessionId);
+									}
+									if (chatHistoryId !== activeSessionId) {
+										setChatHistoryId(activeSessionId);
+									}
+
+									// 发送用户消息
+									addMessageToChat(
+										"user",
+										finalValue,
+										"bg-muted/50 dark:bg-muted/50 text-sm",
+									);
+
+									ensureSearchLoaderStyles();
+									const rawBotMessage = addAssistantRawHtml(getSearchLoaderHTML(), "text-sm");
+									botMessage = rawBotMessage instanceof HTMLElement ? rawBotMessage : null;
+
+									// 请求接口
 									const fetchChat = async (sessionId: string) => {
 										if (value.trim().toLowerCase() === "test") {
 											return fetch("/mdtest.md");
@@ -611,7 +612,7 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 
 									let response = await fetchChat(activeSessionId);
 
-									// On server error, refresh session token and retry once
+									// 错误重试
 									if (!response.ok) {
 										const newSession = await getNewSession();
 										if (newSession) {
@@ -623,10 +624,12 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 
 									if (!response.ok) throw new Error("Failed to fetch response");
 
+									// 移除加载动画
 									if (botMessage) {
 										botMessage.remove();
 									}
 
+									// 流式输出
 									const messageDiv = addMessageToChat(
 										"assistant",
 										"",
@@ -639,7 +642,6 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 									if (!streamContainer)
 										throw new Error("Failed to create stream container");
 
-									// Try real streaming; fall back to simulated streaming on failure
 									const streamResult = await streamFromReader(
 										response,
 										streamContainer as HTMLElement,
@@ -649,7 +651,6 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 									if (streamResult.success) {
 										data = streamResult.text;
 									} else {
-										// Revert to fake streaming illusion
 										data = streamResult.text;
 										if (!data) {
 											try {
@@ -666,6 +667,7 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 										);
 									}
 
+									// 反馈按钮
 									if (messageDiv) {
 										const feedbackDiv = document.createElement("div");
 										feedbackDiv.className = "ml-4 mb-2";
@@ -678,8 +680,7 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
                   `;
 										feedbackDiv.innerHTML = feedbackContent;
 
-										const yesButton =
-											feedbackDiv.querySelector(".feedback-yes");
+										const yesButton = feedbackDiv.querySelector(".feedback-yes");
 										const noButton = feedbackDiv.querySelector(".feedback-no");
 
 										yesButton?.addEventListener("click", () => {
@@ -710,28 +711,18 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
                       </div>
                     `;
 
-											const optionButtons =
-												feedbackDiv.querySelectorAll(".reason-btn");
-											const customReason = feedbackDiv.querySelector(
-												"#custom-reason",
-											) as HTMLTextAreaElement;
-											const submitBtn =
-												feedbackDiv.querySelector("#submit-feedback");
-											const cancelBtn =
-												feedbackDiv.querySelector("#cancel-feedback");
+											const optionButtons = feedbackDiv.querySelectorAll(".reason-btn");
+											const customReason = feedbackDiv.querySelector("#custom-reason") as HTMLTextAreaElement;
+											const submitBtn = feedbackDiv.querySelector("#submit-feedback");
+											const cancelBtn = feedbackDiv.querySelector("#cancel-feedback");
 
 											let selectedReason: string | null = null;
 
 											optionButtons.forEach((btn) => {
 												btn.addEventListener("click", () => {
-													selectedReason =
-														(btn as HTMLElement).dataset.reason || null;
-
-													optionButtons.forEach((b) =>
-														b.classList.remove("bg-secondary", "text-white"),
-													);
+													selectedReason = (btn as HTMLElement).dataset.reason || null;
+													optionButtons.forEach((b) => b.classList.remove("bg-secondary", "text-white"));
 													btn.classList.add("bg-secondary", "text-black");
-
 													if (selectedReason === "other") {
 														customReason.classList.remove("hidden");
 													} else {
@@ -742,18 +733,12 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 
 											submitBtn?.addEventListener("click", () => {
 												if (!selectedReason) return;
-
-												let reasonToSend =
-													selectedReason === "other"
-														? customReason.value.trim()
-														: selectedReason;
-
+												let reasonToSend = selectedReason === "other" ? customReason.value.trim() : selectedReason;
 												if (selectedReason === "other" && !reasonToSend) {
 													customReason.classList.add("border-destructive");
 													customReason.placeholder = "Please write something!";
 													return;
 												}
-
 												handleFeedback(value, data, reasonToSend);
 												feedbackDiv.innerHTML = `<span class=\"text-sm text-muted-foreground\">Thanks for your feedback!</span>`;
 											});
@@ -762,18 +747,17 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 												feedbackDiv.innerHTML = `<span class=\"text-sm text-muted-foreground\">Feedback canceled.</span>`;
 											});
 										});
-
 										messageDiv.appendChild(feedbackDiv);
 									}
 								} catch (error) {
-									if (botMessage) {
-										botMessage.remove();
-									}
+									if (botMessage) botMessage.remove();
 									addMessageToChat(
 										"assistant",
 										`Error: ${error instanceof Error ? error.message : "An unknown error occurred"}`,
 										"bg-destructive/10 dark:bg-destructive/20",
 									);
+								} finally {
+									setIsAwaitingResponse(false);
 								}
 							}}
 						/>
