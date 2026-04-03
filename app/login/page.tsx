@@ -57,7 +57,7 @@ export default function LoginPage() {
 					if (payload.exp) {
 						expires = new Date(payload.exp * 1000);
 					}
-				} catch {}
+				} catch { }
 				Cookies.set("chatdku_token", token, { expires });
 			} catch (e) {
 				console.error("JWT fetch failed:", e);
@@ -73,7 +73,7 @@ export default function LoginPage() {
 		<div className="relative w-screen h-screen">
 			<div className="absolute left-0 top-0 w-full md:w-1/2 h-[20vh] md:h-full overflow-hidden ">
 				<Image
-					src={"/ADBVC-2.jpg"}
+					src={"/ADBVC-2.webp"}
 					alt="Photo of DKU campus."
 					fill
 					className="object-cover md:object-bottom md:rounded-4xl md:p-3 animate-in fade-in-30 duration-200 drop-shadow-md"
@@ -82,15 +82,17 @@ export default function LoginPage() {
 			</div>
 			<div className="flex flex-col items-center md:absolute right-0 translate-y-[20vh] md:translate-y-0 top-0 md:top-0 md:w-1/2 md:h-full overflow-scroll space-y-4 justify-between">
 				<div className="w-full flex flex-row items-center justify-between p-3 sm:p-5">
-					<h1 className="text-xl md:text-2xl lg:text-3xl flex items-center">
-						<Image
-							src="/logos/new_logo.svg"
-							alt="ChatDKU logo"
-							width={40}
-							height={40}
-						/>
-						<b className="ml-1">ChatDKU</b>
-					</h1>
+					<Link href="/" className="cursor-pointer">
+						<h1 className="text-xl md:text-2xl lg:text-3xl flex items-center">
+							<Image
+								src="/logos/new_logo.svg"
+								alt="ChatDKU logo"
+								width={40}
+								height={40}
+							/>
+							<b className="ml-1">ChatDKU</b>
+						</h1>
+					</Link>
 					<div className="sm:space-x-2 flex items-center">
 						<Link href={"/"}>
 							<Button variant="link">{t("login.home")}</Button>
