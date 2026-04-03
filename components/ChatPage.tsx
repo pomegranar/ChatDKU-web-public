@@ -19,6 +19,7 @@ import Side from "@/components/side";
 import { DocumentManager } from "@/components/doc-manager";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import CampusMap from "@/components/CampusMap";
 
 type ChatPageProps = {
 	isDev?: boolean;
@@ -84,7 +85,7 @@ const getSearchLoaderHTML = (): string => {
 	const compass =
 		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="absolute inset-0 icon-cycle icon-3"><circle cx="12" cy="12" r="10"/><path d="m16 8-4 8-4-4 8-4Z"/></svg>';
 	const radar =
-		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="absolute inset-0 icon-cycle icon-4"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M22 12a10 10 0 1 1-10-10"/><path d="M14.31 8.69 21 2"/><circle cx="12" cy="12" r="0.5"/></svg>';
+		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="absolute inset-0 icon-cycle icon-4"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M22 12a10 10 0 1 1-10-10"/><path d="M14.31 8.69 21 2"/><circle cx="12" cy="12" r="0.5"/></svg>';
 	const sparkles =
 		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="absolute inset-0 icon-cycle icon-5"><path d="M12 3l1.9 3.9L18 9l-4.1 2.1L12 15l-1.9-3.9L6 9l4.1-2.1Z"/><path d="M20 17l.95 1.95L23 20l-1.95.95L20 23l-.95-2.05L17 20l2.05-.95Z"/><path d="M4 17l.95 1.95L7 20l-1.95.95L4 23l-.95-2.05L1 20l2.05-.95Z"/></svg>';
 
@@ -123,7 +124,6 @@ const streamFromReader = async (
 		const decoder = new TextDecoder();
 		let firstChunk = true;
 
-		// Clear any existing content in the container
 		elementContainer.innerHTML = "";
 
 		const contentDiv = document.createElement("div");
@@ -148,7 +148,6 @@ const streamFromReader = async (
 			chatLog?.scrollTo(0, chatLog.scrollHeight);
 		}
 
-		// Flush remaining bytes
 		accumulated += decoder.decode();
 		const cleaned = accumulated.replace(/<think>[\s\S]*?<\/think>/gi, "");
 		contentDiv.innerHTML = parseMarkdown(cleaned);
@@ -167,7 +166,6 @@ const streamText = async (
 ) => {
 	const cleanedText = text.replace(/<think>[\s\S]*?<\/think>/gi, "");
 
-	// Ensure streaming styles exist (fade-in)
 	if (!document.getElementById("stream-style")) {
 		const style = document.createElement("style");
 		style.id = "stream-style";
@@ -183,7 +181,6 @@ const streamText = async (
 		"text-foreground  break-words overflow-wrap-anywhere markdown-content text-[0.9375rem]";
 	elementContainer.appendChild(streamContainer);
 
-	// Prefer paragraph chunks; fallback to sentences if only one paragraph
 	const paragraphs = cleanedText
 		.split(/\n{2,}/)
 		.map((s) => s.trim())
@@ -199,7 +196,6 @@ const streamText = async (
 		chunks = sentences.map((s) => s.trim()).filter((s) => s.length > 0);
 	}
 
-	// Stream each chunk as parsed markdown with a quick fade-in
 	for (const chunk of chunks) {
 		const chunkHTML = parseMarkdown(chunk);
 		const chunkDiv = document.createElement("div");
@@ -207,7 +203,6 @@ const streamText = async (
 		chunkDiv.innerHTML = chunkHTML;
 		streamContainer.appendChild(chunkDiv);
 
-		// trigger transition
 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		chunkDiv.offsetHeight;
 		requestAnimationFrame(() => {
@@ -234,6 +229,8 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 	const [showDocumentManager, setShowDocumentManager] = useState(false);
 	const [isSessionLoading, setIsSessionLoading] = useState(true);
 	const [sessionError, setSessionError] = useState<string | null>(null);
+	const [activeView, setActiveView] = useState<"chat" | "campus">("chat");
+	const [activeReference, setActiveReference] = useState<string | null>(null);
 
 	useEffect(() => {
 		configureMarked();
@@ -387,7 +384,6 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 		[isDev],
 	);
 
-	// Inserts a special assistant message rendered from raw HTML (no markdown parsing)
 	const addAssistantRawHtml = useCallback((html: string, className: string) => {
 		const chatLog = document.getElementById("chat-log");
 		const messageElement = document.createElement("div");
@@ -410,6 +406,11 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 	return (
 		<>
 			<Side
+				onCampusMap={() => {
+					setActiveView("campus");
+					setShowStarter(false);
+					setIsChatboxCentered(false);
+				}}
 				onDocumentManager={() => {
 					setShowDocumentManager(true);
 				}}
@@ -418,6 +419,8 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 				currentSessionId={currentSessionId}
 				disabled={!isSessionReady}
 				onNewChat={async () => {
+					
+					setActiveView("chat");
 					setShowStarter(true);
 					setIsChatboxCentered(true);
 					setSessionError(null);
@@ -446,6 +449,7 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 					}
 				}}
 				onConversationSelect={async (sessionId) => {
+					setActiveView("chat");
 					setShowStarter(false);
 					setIsChatboxCentered(false);
 					setCurrentSessionId(sessionId);
@@ -491,20 +495,35 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 					<Navbar />
 				</header>
 
-				<main className="flex-1 w-full flex flex-col items-center pt-16">
-					<div
-						id="chat-log"
-						className="w-full max-w-3xl mx-auto space-y-4 p-4 pb-42 overflow-y-auto"
-					></div>
-				</main>
+				<main className="flex-1 w-full flex flex-col items-center pt-16 relative">
 
-				<div
-					className={`w-full max-w-[95vw] p-2 pt-0 transition-all duration-300 ${
-						isChatboxCentered
-							? "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-							: "fixed bottom-0 left-1/2 -translate-x-1/2 rounded-t-3xl backdrop-blur-md md:backdrop-blur-none z-10"
-					}`}
-				>
+				{activeView === "chat" && (
+					<div
+					id="chat-log"
+					className="w-full max-w-3xl mx-auto space-y-4 p-4 pb-42 overflow-y-auto"
+					></div>
+				)}
+
+				{activeView === "campus" && (
+				<CampusMap
+					onAsk={(reference) => {
+					setActiveReference(reference); 
+					setActiveView("chat");     
+					setIsChatboxCentered(false);   
+					setInputValue("");  
+					}}
+				/>
+				)}
+
+				</main>
+				{activeView === "chat" && (
+					<div
+						className={`w-full max-w-[95vw] p-2 pt-0 transition-all duration-300 ${
+							isChatboxCentered
+								? "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+								: "fixed bottom-0 left-1/2 -translate-x-1/2 rounded-t-3xl backdrop-blur-md md:backdrop-blur-none z-10"
+						}`}
+					>
 					{showStarter && (
 						<div className="w-full flex justify-center">
 							<div className="flex flex-col items-center p-4 w-4/5 md:max-w-1/2 sm:max-w-4/5">
@@ -512,6 +531,7 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 							</div>
 						</div>
 					)}
+					
 					<div>
 						<AIInput
 							disabled={false}
@@ -525,8 +545,17 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 							}
 							onInputChange={(value) => setInputValue(value)}
 							onEndpointChange={setApiEndpoint}
+							activeReference={activeReference}
+							onClearReference={() => setActiveReference(null)}
 							onSubmit={async (value) => {
 								if (!value.trim()) return;
+
+								let finalValue = value.trim();
+								if (activeReference) {
+									finalValue = `${activeReference}, ${finalValue}`;
+									setActiveReference(null);
+								}
+
 								if (isAwaitingResponse) return;
 								setIsAwaitingResponse(true);
 								let botMessage: HTMLElement | null = null;
@@ -535,12 +564,9 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 									setShowStarter(false);
 									setIsChatboxCentered(false);
 
-									const activeSessionId =
-										currentSessionId || getCurrentSessionId() || "";
+									const activeSessionId = currentSessionId || getCurrentSessionId() || "";
 									if (!activeSessionId) {
-										setSessionError(
-											"We couldn't find an active chat session. Please try again.",
-										);
+										setSessionError("We couldn't find an active chat session. Please try again.");
 										return;
 									}
 
@@ -553,17 +579,13 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 
 									addMessageToChat(
 										"user",
-										value.trim(),
+										finalValue,
 										"bg-muted/50 dark:bg-muted/50 text-sm",
 									);
 
 									ensureSearchLoaderStyles();
-									const rawBotMessage = addAssistantRawHtml(
-										getSearchLoaderHTML(),
-										"text-sm",
-									);
-									botMessage =
-										rawBotMessage instanceof HTMLElement ? rawBotMessage : null;
+									const rawBotMessage = addAssistantRawHtml(getSearchLoaderHTML(), "text-sm");
+									botMessage = rawBotMessage instanceof HTMLElement ? rawBotMessage : null;
 
 									const fetchChat = async (sessionId: string) => {
 										if (value.trim().toLowerCase() === "test") {
@@ -576,7 +598,7 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 											method: "POST",
 											headers: { "Content-Type": "application/json" },
 											body: JSON.stringify({
-												messages: [{ role: "user", content: value }],
+												messages: [{ role: "user", content: finalValue }],
 												chatHistoryId: sessionId,
 												mode: thinkingMode ? "agent" : "",
 												searchMode: searchMode,
@@ -586,7 +608,6 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 
 									let response = await fetchChat(activeSessionId);
 
-									// On server error, refresh session token and retry once
 									if (!response.ok) {
 										const newSession = await getNewSession();
 										if (newSession) {
@@ -614,7 +635,6 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 									if (!streamContainer)
 										throw new Error("Failed to create stream container");
 
-									// Try real streaming; fall back to simulated streaming on failure
 									const streamResult = await streamFromReader(
 										response,
 										streamContainer as HTMLElement,
@@ -624,7 +644,6 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 									if (streamResult.success) {
 										data = streamResult.text;
 									} else {
-										// Revert to fake streaming illusion
 										data = streamResult.text;
 										if (!data) {
 											try {
@@ -653,8 +672,7 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
                   `;
 										feedbackDiv.innerHTML = feedbackContent;
 
-										const yesButton =
-											feedbackDiv.querySelector(".feedback-yes");
+										const yesButton = feedbackDiv.querySelector(".feedback-yes");
 										const noButton = feedbackDiv.querySelector(".feedback-no");
 
 										yesButton?.addEventListener("click", () => {
@@ -685,28 +703,18 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
                       </div>
                     `;
 
-											const optionButtons =
-												feedbackDiv.querySelectorAll(".reason-btn");
-											const customReason = feedbackDiv.querySelector(
-												"#custom-reason",
-											) as HTMLTextAreaElement;
-											const submitBtn =
-												feedbackDiv.querySelector("#submit-feedback");
-											const cancelBtn =
-												feedbackDiv.querySelector("#cancel-feedback");
+											const optionButtons = feedbackDiv.querySelectorAll(".reason-btn");
+											const customReason = feedbackDiv.querySelector("#custom-reason") as HTMLTextAreaElement;
+											const submitBtn = feedbackDiv.querySelector("#submit-feedback");
+											const cancelBtn = feedbackDiv.querySelector("#cancel-feedback");
 
 											let selectedReason: string | null = null;
 
 											optionButtons.forEach((btn) => {
 												btn.addEventListener("click", () => {
-													selectedReason =
-														(btn as HTMLElement).dataset.reason || null;
-
-													optionButtons.forEach((b) =>
-														b.classList.remove("bg-secondary", "text-white"),
-													);
+													selectedReason = (btn as HTMLElement).dataset.reason || null;
+													optionButtons.forEach((b) => b.classList.remove("bg-secondary", "text-white"));
 													btn.classList.add("bg-secondary", "text-black");
-
 													if (selectedReason === "other") {
 														customReason.classList.remove("hidden");
 													} else {
@@ -717,18 +725,12 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 
 											submitBtn?.addEventListener("click", () => {
 												if (!selectedReason) return;
-
-												let reasonToSend =
-													selectedReason === "other"
-														? customReason.value.trim()
-														: selectedReason;
-
+												let reasonToSend = selectedReason === "other" ? customReason.value.trim() : selectedReason;
 												if (selectedReason === "other" && !reasonToSend) {
 													customReason.classList.add("border-destructive");
 													customReason.placeholder = "Please write something!";
 													return;
 												}
-
 												handleFeedback(value, data, reasonToSend);
 												feedbackDiv.innerHTML = `<span class=\"text-sm text-muted-foreground\">Thanks for your feedback!</span>`;
 											});
@@ -737,13 +739,10 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 												feedbackDiv.innerHTML = `<span class=\"text-sm text-muted-foreground\">Feedback canceled.</span>`;
 											});
 										});
-
 										messageDiv.appendChild(feedbackDiv);
 									}
 								} catch (error) {
-									if (botMessage) {
-										botMessage.remove();
-									}
+									if (botMessage) botMessage.remove();
 									addMessageToChat(
 										"assistant",
 										`Error: ${error instanceof Error ? error.message : "An unknown error occurred"}`,
@@ -789,6 +788,7 @@ export default function ChatPage({ isDev = false }: ChatPageProps) {
 						</p>
 					)}
 				</div>
+				)}
 				<DocumentManager
 					open={showDocumentManager}
 					onOpenChange={setShowDocumentManager}
