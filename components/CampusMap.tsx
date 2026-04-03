@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
 
 type SubItem = {
 	name: string;
@@ -19,673 +20,7 @@ type Marker = {
 	items: SubItem[];
 };
 
-const markers: Marker[] = [
-	{
-		id: 1,
-		type: "building",
-		top: 320,
-		left: 370,
-		items: [
-			{
-				name: "Academic Building",
-				description: "Abbreviation: AB",
-				hours: "Open 24 hours",
-				location: "DKU Campus",
-				image: "/photos/AB.jpg",
-			},
-		],
-	},
-	{
-		id: 2,
-		type: "building",
-		top: 340,
-		left: 175,
-		items: [
-			{
-				name: "Conference Center",
-				description: "Abbreviation: CC",
-				hours: "Open 24 hours",
-				location: "DKU Campus",
-				image: "/photos/CC.jpg",
-			},
-		],
-	},
-	{
-		id: 3,
-		type: "building",
-		top: 480,
-		left: 290,
-		items: [
-			{
-				name: "Innovation Building",
-				description: "Abbreviation: IB",
-				hours: "Open 24 hours",
-				location: "DKU Campus",
-				image: "/photos/IB.jpg",
-			},
-		],
-	},
-	{
-		id: 4,
-		type: "building",
-		top: 312,
-		left: 238,
-		items: [
-			{
-				name: "Water Pavilion",
-				description: "",
-				hours: "Open 24 hours",
-				location: "DKU Campus",
-				image: "/photos/Water Pavilion.jpg",
-			},
-		],
-	},
-	{
-		id: 5,
-		type: "building",
-		top: 390,
-		left: 580,
-		items: [
-			{
-				name: "Library",
-				description: "Abbreviation: LIB",
-				hours: "8:00 - 23:00",
-				location: "DKU Campus",
-				image: "/photos/LIB.jpg",
-			},
-		],
-	},
-	{
-		id: 6,
-		type: "building",
-		top: 470,
-		left: 470,
-		items: [
-			{
-				name: "Wuhan-Duke Research Institute",
-				description: "Abbreviation: WDR",
-				hours: "Open 24 hours",
-				location: "DKU Campus",
-				image: "/photos/WDR.jpg",
-			},
-		],
-	},
-	{
-		id: 7,
-		type: "building",
-		top: 305,
-		left: 585,
-		items: [
-			{
-				name: "Community Center West",
-				description: "Abbreviation: CCTW",
-				hours: "Open 24 hours",
-				location: "DKU Campus",
-				image: "/photos/CCTW.jpg",
-			},
-		],
-	},
-	{
-		id: 8,
-		type: "building",
-		top: 300,
-		left: 685,
-		items: [
-			{
-				name: "Community Center East",
-				description: "Abbreviation: CCTE",
-				hours: "Open 24 hours",
-				location: "DKU Campus",
-				image: "/photos/CCTE.jpg",
-			},
-		],
-	},
-	{
-		id: 9,
-		type: "building",
-		top: 295,
-		left: 840,
-		items: [
-			{
-				name: "Sports Complex",
-				description: "Abbreviation: SC",
-				hours: "Weekdays: 7:00 - 21:00 Weekends: 10:00 - 15:00",
-				location: "DKU Campus",
-				image: "/photos/SC.jpg",
-			},
-		],
-	},
-	{
-		id: 10,
-		type: "building",
-		top: 165,
-		left: 860,
-		items: [
-			{
-				name: "Soccer Field",
-				description: "",
-				hours: "Open 24 hours",
-				location: "DKU Campus",
-				image: "/photos/Soccer.jpg",
-			},
-		],
-	},
-	{
-		id: 11,
-		type: "building",
-		top: 180,
-		left: 661,
-		items: [
-			{
-				name: "Undergraduate Residence Halls",
-				description: "",
-				hours: "Open 24 hours",
-				location: "DKU Campus",
-				image: "/photos/Residence.jpg",
-			},
-		],
-	},
-	{
-		id: 12,
-		type: "building",
-		top: 390,
-		left: 755,
-		items: [
-			{
-				name: "Administrative Building",
-				description: "Abbreviation: ADB",
-				hours: "Open 24 hours",
-				location: "DKU Campus",
-				image: "/photos/ADB.jpg",
-			},
-		],
-	},
-	{
-		id: 13,
-		type: "building",
-		top: 483,
-		left: 755,
-		items: [
-			{
-				name: "Visitor Center",
-				description: "Abbreviation: VC",
-				hours: "Open 24 hours",
-				location: "DKU Campus",
-				image: "/photos/VC.jpg",
-			},
-		],
-	},
-	{
-		id: 14,
-		type: "building",
-		top: 335,
-		left: 430,
-		items: [
-			{
-				name: "Academic Avenue",
-				description: "",
-				hours: "Open 24 hours",
-				location: "DKU Campus",
-				image: "/photos/Avenue.jpg",
-			},
-		],
-	},
-	{
-		id: 15,
-		type: "office",
-		top: 300,
-		left: 685,
-		items: [
-			{
-				name: "Office of Career Services",
-				description: "careerservices@dukekunshan.edu.cn",
-				hours: "Weekdays: 9:00 - 17:30",
-				location: "CCTE 1019",
-				image: "/photos/career.png",
-				introduction:
-					"Providing career development services to help students achieve their professional goals",
-			},
-			{
-				name: "Health Services",
-				description: "campushealth@dukekunshan.edu.cn",
-				hours: "Weekdays: 9:00 - 12:00 & 13:00 - 17:30",
-				location: "CCTE 4200",
-				image: "/photos/Health.png",
-				introduction:
-					"Offering high-quality primary care and health education to the DKU community",
-			},
-			{
-				name: "Office of Student Experience",
-				description: "",
-				location: "CCTE 4100 suite",
-				image: "/photos/Experience.png",
-				introduction:
-					"Developing students holistically through transformative co-curricular experiences",
-			},
-			{
-				name: "Campus Engagement",
-				description: "dkucampusengagement@dukekunshan.edu.cn",
-				location: "CCTE 2019",
-				image: "/photos/Engagement.png",
-				introduction:
-					"Creating a welcoming community to support student transition and personal growth",
-			},
-			{
-				name: "Chinese Student Services",
-				description: "dku-chinese-student-services@dukekunshan.edu.cn",
-				hours: "Weekdays: 9:00-12:00 & 13:00-17:30",
-				location: "CCTE 4100",
-				image: "/photos/Chinese.png",
-				introduction:
-					"Cultivating ethically responsible citizens through community and leadership programs",
-			},
-			{
-				name: "International Student Services",
-				description: "DKU-ISS@dukekunshan.edu.cn",
-				hours: "Weekdays: 9:00-17:30",
-				location: "CCTE 4111 & 4121",
-				image: "/photos/ISS.png",
-				introduction:
-					"Assisting international students with visas, residence permits, and cultural integration",
-			},
-			{
-				name: "Counseling and Wellness Services (CAWS)",
-				description: "caws@dukekunshan.edu.cn",
-				hours: "Weekdays: 9:00-12:00 & 13:00-17:30",
-				location: "CCTE 4300",
-				image: "/photos/CAWS.png",
-				introduction:
-					"Promoting mental health and well-being through support and intervention services",
-			},
-			{
-				name: "Student Conduct",
-				description: "studentconduct@dukekunshan.edu.cn",
-				hours: "Weekdays: 9:00-17:30",
-				location: "CCTE 4100 suite",
-				image: "/photos/Conduct.png",
-				introduction:
-					"Educating students on rights and responsibilities, administering non-academic conduct",
-			},
-			{
-				name: "Case Management",
-				description: "Dku-ocm@dukekunshan.edu.cn",
-				hours: "Weekdays: 9:00-12:00 & 13:00-17:30",
-				location: "CCTE 4126",
-				image: "/photos/Case.png",
-				introduction:
-					"Identifying and supporting students facing obstacles to success and holistic wellness",
-			},
-			{
-				name: "Student Accessibility Services Office (SASO)",
-				description: "SASO@dukekunshan.edu.cn",
-				hours: "Weekdays: 9:00-12:00 & 13:00-17:30",
-				location: "CCTE 4116",
-				image: "/photos/Accessibility.png",
-				introduction:
-					"Providing reasonable accommodations for students with disabilities to ensure equal access",
-			},
-		],
-	},
-	{
-		id: 16,
-		type: "office",
-		top: 390,
-		left: 580,
-		items: [
-			{
-				name: "Library Information Desk",
-				description: "dkulibrary@dukekunshan.edu.cn",
-				hours: "Weekdays: 9:00 - 21:00 Weekends: 14:00 - 21:00",
-				location: "LIB 1F Information Desk",
-				image: "/photos/library.png",
-				introduction:
-					"Serving as the central hub for library inquiries and research assistance",
-			},
-			{
-				name: "DKU Information Technology (DKU IT)",
-				description: "service-desk@dukekunshan.edu.cn",
-				hours: "Weekdays: 9:00-17:30",
-				location: "LIB 1F DKU IT Service Desk or AB2004",
-				image: "/photos/IT.png",
-				introduction:
-					"Providing computing and technology support for students, faculty, and staff",
-			},
-		],
-	},
-	{
-		id: 17,
-		type: "office",
-		top: 320,
-		left: 370,
-		items: [
-			{
-				name: "Writing and Language Studio",
-				description: "DKU_WLS@dukekunshan.edu.cn",
-				hours: "",
-				location: "AB 2101",
-				image: "/photos/WLS.png",
-				introduction:
-					"Supporting writing and multilingual communication skills across the community",
-			},
-		],
-	},
-	{
-		id: 18,
-		type: "printer",
-		top: 390,
-		left: 580,
-		items: [
-			{
-				name: "Library Printer",
-				description: "",
-				hours: "Open 24 hours",
-				location:
-					"\n1F Rooms 1010, 1118 – Ricoh (Color) \n2F Rooms 2022, 2120 – Ricoh (Color) \n3F Rooms 3109, 3113 – Ricoh (Color) \n4F Room 4115 – Ricoh (Color) ",
-			},
-		],
-	},
-	{
-		id: 19,
-		type: "printer",
-		top: 320,
-		left: 370,
-		items: [
-			{
-				name: "Academic Building Printer",
-				description: "",
-				hours: "Open 24 hours",
-				location:
-					"\n1F Across from Room 1075 – Ricoh (BW) \n2F Room 2013 – Ricoh (Color) \n2F Near Room 2A33 – Ricoh (Color) \n2F Room 2004 – Ricoh (Color) \n3F Near Room 3221 – Ricoh (Color) \n3F Near Room 3031 – Ricoh (Color) ",
-			},
-		],
-	},
-	{
-		id: 20,
-		type: "printer",
-		top: 340,
-		left: 175,
-		items: [
-			{
-				name: "Conference Center Printer",
-				description: "",
-				hours: "Open 24 hours",
-				location:
-					"\n1F Near Room 1071 – Ricoh (Color) \n2F Near Room 2056 – Ricoh (Color) \n2F Near Room 2095 – Ricoh (Color)  ",
-			},
-		],
-	},
-	{
-		id: 21,
-		type: "printer",
-		top: 190,
-		left: 225,
-		items: [
-			{
-				name: "Student Residences Hall Printer",
-				description: "",
-				hours: "Open 24 hours",
-				location: "\n2F Main Lounge – Ricoh (BW)  ",
-			},
-		],
-	},
-	{
-		id: 22,
-		type: "printer",
-		top: 180,
-		left: 661,
-		items: [
-			{
-				name: "Undergraduate Residence Hall Printer",
-				description: "",
-				hours: "Open 24 hours",
-				location:
-					"\nA#1102, B#1001, C#1102, D#1001, E#1102, F#1001, G#1102, H#1001 – Ricoh (BW)   ",
-			},
-		],
-	},
-	{
-		id: 23,
-		type: "printer",
-		top: 240,
-		left: 487,
-		items: [
-			{
-				name: "Graduate Center Printer",
-				description: "",
-				hours: "Open 24 hours",
-				location: "\n1F Room 1102 – Ricoh (BW) ",
-			},
-		],
-	},
-	{
-		id: 24,
-		type: "printer",
-		top: 480,
-		left: 290,
-		items: [
-			{
-				name: "Innovation Building Printer",
-				description: "",
-				hours: "Open 24 hours",
-				location:
-					"\n1F West Hallway – Ricoh (Color) \n1F East Hallway – Ricoh (Color) \n2F Rooms 2016, 2031, 2062 – Ricoh (Color) \n3F Rooms 3028, 3031 (Stapler), 3088 – Ricoh (Color/BW)  ",
-			},
-		],
-	},
-	{
-		id: 25,
-		type: "printer",
-		top: 390,
-		left: 755,
-		items: [
-			{
-				name: "Administration Building Printer",
-				description: "",
-				hours: "Open 24 hours",
-				location:
-					"\n1F Rooms 1021, 1107A, 1208 – Ricoh (Color) \n2F Rooms 2003, 2203C – Ricoh (Color) \n3F Rooms 3003, 3014, 3201A – Ricoh (Color) \n4F Rooms 4003, 4201 – Ricoh (Color)  ",
-			},
-		],
-	},
-	{
-		id: 26,
-		type: "printer",
-		top: 295,
-		left: 840,
-		items: [
-			{
-				name: "Sports Complex Printer",
-				description: "",
-				hours: "Open 24 hours",
-				location: "\n2F Room 2108 – Ricoh (Color)  ",
-			},
-		],
-	},
-	{
-		id: 27,
-		type: "printer",
-		top: 300,
-		left: 685,
-		items: [
-			{
-				name: "Community Center E Printer",
-				description: "",
-				hours: "Open 24 hours",
-				location:
-					"\n1F Room 1019D – Ricoh (Color) \n4F Room 4132 – Ricoh (Color) ",
-			},
-		],
-	},
-	{
-		id: 28,
-		type: "printer",
-		top: 470,
-		left: 470,
-		items: [
-			{
-				name: "WHU-DUKE Research Institute Printer",
-				description: "",
-				hours: "Open 24 hours",
-				location:
-					"\n1F Room 1129 – Ricoh (Color) \n1F Near Room 1012– Ricoh (Color) \n2F Rooms 2129, 2212 – Ricoh (Color) \n3F Rooms 3212, 3131 (Stapler) – Ricoh (Color) ",
-			},
-		],
-	},
-	{
-		id: 29,
-		type: "office",
-		top: 480,
-		left: 290,
-		items: [
-			{
-				name: "DKU Innovation and Entrepreneurship Initiative (DKU InE)",
-				description: "dku-innovation@dukekunshan.edu.cn",
-				location: "IB 2F",
-				image: "/photos/INE.png",
-				introduction:
-					"Fostering creativity, social responsibility, and visionary entrepreneurship",
-			},
-			{
-				name: "Center for Teaching and Learning",
-				description: "dku_ctl@dukekunshan.edu.cn",
-				location: "IB 3018",
-				image: "/photos/learning.png",
-				introduction:
-					"Supporting faculty with innovative, evidence-based teaching practices",
-			},
-		],
-	},
-	{
-		id: 30,
-		type: "office",
-		top: 390,
-		left: 755,
-		items: [
-			{
-				name: "Office of Undergraduate Advising",
-				description: "advising@dukekunshan.edu.cn / DKU-arc@dukekunshan.edu.cn",
-				location: "ADB 1F",
-				image: "/photos/Advising.png",
-				introduction:
-					"Guiding students through the interdisciplinary DKU curriculum",
-			},
-			{
-				name: "Office of Assessment",
-				description: "dku_assessment@dukekunshan.edu.cn",
-				location: "ADB 1020",
-				image: "/photos/Assessment.png",
-				introduction:
-					"Leading assessment to improve teaching, learning, and institutional effectiveness",
-			},
-			{
-				name: "Office of the Registrar",
-				description: "dku-registrar@dukekunshan.edu.cn",
-				location: "ADB 1107",
-				image: "/photos/Registrar.png",
-				introduction:
-					"Managing academic records, calendars, and registration services",
-			},
-		],
-	},
-	{
-		id: 31,
-		type: "office",
-		top: 340,
-		left: 175,
-		items: [
-			{
-				name: "Language and Culture Center",
-				description: "DKU-LCC@dukekunshan.edu.cn",
-				location: "CC 1070",
-				image: "/photos/Language.png",
-				introduction:
-					"Offering language courses in English, Chinese, and additional languages",
-			},
-		],
-	},
-	{
-		id: 32,
-		type: "office",
-		top: 180,
-		left: 661,
-		items: [
-			{
-				name: "Residence Life",
-				description: "residencelife@dukekunshan.edu.cn",
-				hours: "Weekdays: 9:00-17:30",
-				location:
-					"\nGraduate Apartments 1110 suite\nBuilding 15A 1101\nBuilding 15C 1101\nBuilding 15E 1101\nBuilding 15G 1101",
-				image: "/photos/Residence.png",
-				introduction:
-					"Building inclusive campus communities and managing residential life programs",
-			},
-		],
-	},
-	{
-		id: 33,
-		type: "office",
-		top: 295,
-		left: 840,
-		items: [
-			{
-				name: "Athletics",
-				description: "sports@dukekunshan.edu.cn",
-				location: "SC 2F",
-				image: "/photos/Athletes.png",
-				introduction:
-					"Cultivating values through sport, fitness, and wellness for student success",
-			},
-		],
-	},
-];
-
-const extraOfficeItems: (SubItem & { id: string })[] = [
-	{
-		id: "extra-1",
-		name: "Office of Academic Affairs",
-		description: "dku-academicaffairs@dukekunshan.edu.cn",
-		introduction:
-			"Advancing inquiry-based teaching to prepare students for complex global challenges",
-		location: "",
-		image: "",
-	},
-	{
-		id: "extra-2",
-		name: "Institute for Global Higher Education",
-		description: "",
-		introduction:
-			"Advancing global education through collaborative research and innovation",
-		location: "",
-		image: "",
-	},
-	{
-		id: "extra-3",
-		name: "Research Support Office",
-		description: "research-support@dukekunshan.edu.cn",
-		introduction:
-			"Administering sponsored research projects and ensuring compliance",
-		location: "",
-		image: "",
-	},
-	{
-		id: "extra-4",
-		name: "Global Education",
-		description: "dku-globaledu@dukekunshan.edu.cn",
-		introduction:
-			"Supporting students with study away opportunities and global learning",
-		location: "",
-		image: "",
-	},
-	{
-		id: "extra-5",
-		name: "Office of Faculty Affairs",
-		description: "dku_facultyaffairs@dukekunshan.edu.cn",
-		introduction:
-			"Supporting faculty in scholarship, teaching, and professional growth",
-		location: "",
-		image: "",
-	},
-];
+type ExtraOfficeItem = SubItem & { id: string };
 
 const useIsMobile = () => {
 	const [isMobile, setIsMobile] = useState(false);
@@ -723,12 +58,14 @@ const MapModal = ({
 				style={{ width: "min(90vw, 500px)" }}
 				onClick={(e) => e.stopPropagation()}
 			>
-				<button
+				<Button
+					variant="ghost"
+					size="icon"
 					onClick={onClose}
-					className="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-black/70 dark:bg-white/70 text-white dark:text-black flex items-center justify-center hover:bg-black dark:hover:bg-white"
+					className="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-black/70 dark:bg-white/70 text-white dark:text-black hover:bg-black dark:hover:bg-white"
 				>
 					✕
-				</button>
+				</Button>
 				<div className="relative w-full" style={{ aspectRatio: "1000 / 650" }}>
 					<img
 						src={mapImage}
@@ -765,6 +102,10 @@ export default function CampusMap({
 	const [selectedType, setSelectedType] = useState<
 		"building" | "office" | "printer"
 	>("building");
+	const [markers, setMarkers] = useState<Marker[]>([]);
+	const [extraOfficeItems, setExtraOfficeItems] = useState<ExtraOfficeItem[]>(
+		[],
+	);
 	const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [mapImage, setMapImage] = useState("/mapupdate.png");
@@ -775,6 +116,15 @@ export default function CampusMap({
 	} | null>(null);
 	const isMobile = useIsMobile();
 	const panelContentRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		fetch(`/api/campus-map?type=${selectedType}`)
+			.then((res) => res.json())
+			.then((data) => {
+				setMarkers(data.markers);
+				setExtraOfficeItems(data.extraOfficeItems);
+			});
+	}, [selectedType]);
 
 	useEffect(() => {
 		if (isMobile) setViewMode("list");
@@ -800,7 +150,7 @@ export default function CampusMap({
 		}
 	}, [currentIndex]);
 
-	const filteredMarkers = markers.filter((m) => m.type === selectedType);
+	const filteredMarkers = markers;
 	const isBottomHalf = selectedMarker && selectedMarker.top > 350;
 
 	let finalListItems: any[] = [];
@@ -823,7 +173,7 @@ export default function CampusMap({
 				itemIndex: idx,
 			})),
 		);
-		const extraItems = extraOfficeItems.map((item, idx) => ({
+		const extraItems = extraOfficeItems.map((item) => ({
 			...item,
 			markerId: -1,
 			markerType: "office" as const,
@@ -850,13 +200,10 @@ export default function CampusMap({
 	const FilterButtons = () => (
 		<div className="flex flex-row md:flex-col gap-3 md:gap-4 justify-center md:justify-start mt-2 md:mt-6">
 			{(["building", "office", "printer"] as const).map((type) => (
-				<button
+				<Button
 					key={type}
-					className={`px-3 md:px-4 py-1.5 md:py-2 rounded-xl text-sm md:text-base transition-all hover:scale-105 ${
-						selectedType === type
-							? "bg-black dark:bg-white text-white dark:text-black shadow-lg"
-							: "bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600"
-					}`}
+					variant={selectedType === type ? "default" : "secondary"}
+					className="rounded-xl text-sm md:text-base px-3 md:px-4 py-1.5 md:py-2"
 					onClick={() => {
 						setSelectedType(type);
 						setSelectedMarker(null);
@@ -868,7 +215,7 @@ export default function CampusMap({
 						: type === "office"
 							? "Offices"
 							: "Printers"}
-				</button>
+				</Button>
 			))}
 		</div>
 	);
@@ -882,26 +229,20 @@ export default function CampusMap({
 					<div className="relative w-full md:w-[1000px] h-[500px] md:h-[650px]">
 						{!isMobile && (
 							<div className="absolute top-3 left-3 z-20 flex gap-2 bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm rounded-full p-1 shadow-md border">
-								<button
+								<Button
+									variant={viewMode === "map" ? "default" : "ghost"}
+									className="rounded-full px-3 py-1.5 text-sm font-medium"
 									onClick={() => setViewMode("map")}
-									className={`px-3 py-1.5 text-sm font-medium rounded-full transition-all hover:scale-105 ${
-										viewMode === "map"
-											? "bg-black dark:bg-white text-white dark:text-black shadow"
-											: "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-									}`}
 								>
 									Map
-								</button>
-								<button
+								</Button>
+								<Button
+									variant={viewMode === "list" ? "default" : "ghost"}
+									className="rounded-full px-3 py-1.5 text-sm font-medium"
 									onClick={() => setViewMode("list")}
-									className={`px-3 py-1.5 text-sm font-medium rounded-full transition-all hover:scale-105 ${
-										viewMode === "list"
-											? "bg-black dark:bg-white text-white dark:text-black shadow"
-											: "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-									}`}
 								>
 									List
-								</button>
+								</Button>
 							</div>
 						)}
 
@@ -943,12 +284,14 @@ export default function CampusMap({
 											}}
 											onClick={(e) => e.stopPropagation()}
 										>
-											<button
+											<Button
+												variant="ghost"
+												size="icon"
 												onClick={() => setSelectedMarker(null)}
-												className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/70 dark:bg-white/70 text-white dark:text-black flex items-center justify-center hover:scale-110 z-10"
+												className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/70 dark:bg-white/70 text-white dark:text-black hover:bg-black dark:hover:bg-white z-10"
 											>
 												✕
-											</button>
+											</Button>
 											<div
 												ref={panelContentRef}
 												className="flex-1 overflow-y-auto"
@@ -968,7 +311,6 @@ export default function CampusMap({
 													<div className="text-sm text-neutral-600 dark:text-neutral-400">
 														{selectedMarker.items[currentIndex].description}
 													</div>
-													{/* 地图面板中显示 introduction（仅当存在时） */}
 													{selectedMarker.items[currentIndex].introduction && (
 														<div className="mt-1 text-xs italic text-neutral-500 dark:text-neutral-400">
 															{selectedMarker.items[currentIndex].introduction}
@@ -986,8 +328,8 @@ export default function CampusMap({
 															{selectedMarker.items[currentIndex].location}
 														</div>
 													</div>
-													<button
-														className="mt-4 w-full py-1.5 rounded-lg bg-black dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-all hover:scale-105"
+													<Button
+														className="mt-4 w-full rounded-lg"
 														onClick={() =>
 															onAsk(
 																`About ${selectedMarker!.items[currentIndex].name}`,
@@ -995,30 +337,34 @@ export default function CampusMap({
 														}
 													>
 														Ask ChatDKU about this
-													</button>
+													</Button>
 												</div>
 											</div>
 											{selectedMarker.items.length > 1 && (
 												<div className="flex items-center justify-center gap-4 py-2">
-													<button
+													<Button
+														variant="ghost"
+														size="icon"
 														disabled={currentIndex === 0}
 														onClick={() => setCurrentIndex((p) => p - 1)}
-														className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-800 hover:scale-110 transition-all disabled:opacity-30 text-neutral-800 dark:text-neutral-200"
+														className="w-8 h-8 rounded-full"
 													>
-														‹
-													</button>
+														&#8249;
+													</Button>
 													<div className="text-sm text-neutral-600 dark:text-neutral-400">
 														{currentIndex + 1} / {selectedMarker.items.length}
 													</div>
-													<button
+													<Button
+														variant="ghost"
+														size="icon"
 														disabled={
 															currentIndex === selectedMarker.items.length - 1
 														}
 														onClick={() => setCurrentIndex((p) => p + 1)}
-														className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-800 hover:scale-110 transition-all disabled:opacity-30 text-neutral-800 dark:text-neutral-200"
+														className="w-8 h-8 rounded-full"
 													>
-														›
-													</button>
+														&#8250;
+													</Button>
 												</div>
 											)}
 										</div>
@@ -1081,8 +427,8 @@ export default function CampusMap({
 																		</div>
 																	</div>
 																</div>
-																<button
-																	className="mt-3 md:mt-4 w-full py-1.5 text-sm rounded-lg bg-black dark:bg-white text-white dark:text-black transition-all hover:scale-105 hover:bg-neutral-800 dark:hover:bg-neutral-200"
+																<Button
+																	className="mt-3 md:mt-4 w-full rounded-lg text-sm"
 																	onClick={() =>
 																		handleViewOnMap(
 																			item.markerId,
@@ -1091,7 +437,7 @@ export default function CampusMap({
 																	}
 																>
 																	View on the map
-																</button>
+																</Button>
 															</>
 														) : isOfficeOrPrinter ? (
 															<div className="flex flex-col sm:flex-row gap-3">
@@ -1127,15 +473,16 @@ export default function CampusMap({
 																	</div>
 																</div>
 																<div className="flex flex-row sm:flex-col justify-start sm:justify-center gap-2 sm:gap-3 flex-shrink-0">
-																	<button
-																		className="px-3 md:px-4 py-1.5 text-xs md:text-sm rounded-lg bg-black dark:bg-white text-white dark:text-black whitespace-nowrap transition-all hover:scale-105 hover:bg-neutral-800 dark:hover:bg-neutral-200"
+																	<Button
+																		className="rounded-lg text-xs md:text-sm"
 																		onClick={() => onAsk(`About ${item.name}`)}
 																	>
 																		Ask ChatDKU
-																	</button>
+																	</Button>
 																	{hasMapMarker && (
-																		<button
-																			className="px-3 md:px-4 py-1.5 text-xs md:text-sm rounded-lg bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 whitespace-nowrap transition-all hover:scale-105 hover:bg-neutral-300 dark:hover:bg-neutral-600"
+																		<Button
+																			variant="secondary"
+																			className="rounded-lg text-xs md:text-sm"
 																			onClick={() =>
 																				handleViewOnMap(
 																					item.markerId,
@@ -1144,7 +491,7 @@ export default function CampusMap({
 																			}
 																		>
 																			View on map
-																		</button>
+																		</Button>
 																	)}
 																</div>
 															</div>
