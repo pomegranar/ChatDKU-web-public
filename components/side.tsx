@@ -1,6 +1,7 @@
 "use client";
 
 import {
+	Map,
 	Menu,
 	MessageCircle,
 	MessageCircleQuestion,
@@ -58,6 +59,7 @@ import {
 import { useLanguage } from "@/components/language-provider";
 
 interface SidebarProps {
+	onCampusMap: () => void;
 	onEndpointChange?: (endpoint: string) => void;
 	onNewChat: () => void;
 	onConversationSelect: (sessionId: string) => void;
@@ -66,6 +68,7 @@ interface SidebarProps {
 }
 
 export default function Side({
+	onCampusMap,
 	onEndpointChange,
 	onNewChat,
 	onConversationSelect,
@@ -194,6 +197,14 @@ export default function Side({
 							>
 								<SquarePen />
 								{t("side.newChat")}
+							</Button>
+							<Button
+								variant="inChatbox"
+								className="w-full justify-start"
+								onClick={onCampusMap}
+							>
+								<Map />
+								{t("side.campusResources")}
 							</Button>
 
 							<Link href="/about">

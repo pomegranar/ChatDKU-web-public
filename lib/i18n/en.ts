@@ -217,6 +217,7 @@ const en = {
 	"side.deleteConfirm": "This will permanently delete this chat history.",
 	"side.cancel": "Cancel",
 	"side.delete": "Delete",
+	"side.campusResources": "Campus Resources",
 
 	// Starter
 	"starter.title": "Ask ChatDKU",

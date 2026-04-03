@@ -1,6 +1,6 @@
 "use client";
 
-import { CornerRightUp } from "lucide-react";
+import { CornerRightUp, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/components/utils";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,6 +18,8 @@ export function AIInput({
   thinkingMode,
   onThinkingModeChange,
   onEndpointChange,
+  activeReference,
+  onClearReference,
   disabled = false,
 }: {
   id?: string;
@@ -32,6 +34,8 @@ export function AIInput({
   onThinkingModeChange?: (value: boolean) => void;
   onEndpointChange?: (endpoint: string) => void;
   onSearchModeChange?: (value: string) => void;
+  activeReference?: string | null;
+  onClearReference?: () => void;
   disabled?: boolean;
 }) {
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({
@@ -120,6 +124,20 @@ export function AIInput({
 					`}
         </style>
 
+        {activeReference && (
+          <div className="flex items-center gap-2 px-3 pt-2 pb-1">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted text-xs text-muted-foreground">
+              {activeReference}
+              <button
+                type="button"
+                onClick={onClearReference}
+                className="ml-0.5 hover:text-foreground"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          </div>
+        )}
         <div className="flex flex-row items-center">
           <Textarea
             autoFocus

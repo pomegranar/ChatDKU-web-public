@@ -187,6 +187,7 @@ const zh = {
   "side.deleteConfirm": "此操作将永久删除此对话历史。",
   "side.cancel": "取消",
   "side.delete": "删除",
+  "side.campusResources": "校园资源",
 
   // Starter
   "starter.title": "问 ChatDKU",

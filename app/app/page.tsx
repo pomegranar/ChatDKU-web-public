@@ -10,6 +10,7 @@ import { Navbar } from "@/components/navbar";
 import { PromptRecs } from "@/components/prompt_recs";
 import WelcomeBanner from "@/components/WelcomeBanner";
 import Side from "@/components/side";
+import CampusMap from "@/components/CampusMap";
 import { useLanguage } from "@/components/language-provider";
 
 const configureMarked = () => {
@@ -218,6 +219,8 @@ export default function App() {
 	const [searchMode, setSearchMode] = useState("");
 	const [inputValue, setInputValue] = useState("");
 	const [apiEndpoint, setApiEndpoint] = useState(getStoredEndpoint());
+	const [activeView, setActiveView] = useState<"chat" | "campus">("chat");
+	const [activeReference, setActiveReference] = useState<string | null>(null);
 	const router = useRouter();
 	const { t } = useLanguage();
 
@@ -333,9 +336,15 @@ export default function App() {
 	return (
 		<>
 			<Side
+				onCampusMap={() => {
+					setActiveView("campus");
+					setShowStarter(false);
+					setIsChatboxCentered(false);
+				}}
 				onEndpointChange={setApiEndpoint}
 				currentEndpoint={apiEndpoint}
 				onNewChat={() => {
+					setActiveView("chat");
 					setShowStarter(true);
 					setIsChatboxCentered(true);
 					setChatHistory([]);
@@ -356,13 +365,26 @@ export default function App() {
 					<Navbar />
 				</header>
 
-				<main className="flex-1 w-full flex flex-col items-center pt-16">
-					<div
-						id="chat-log"
-						className="w-full max-w-3xl mx-auto space-y-4 p-4 pb-42 overflow-y-auto"
-					></div>
+				<main className="flex-1 w-full flex flex-col items-center pt-16 relative">
+					{activeView === "chat" && (
+						<div
+							id="chat-log"
+							className="w-full max-w-3xl mx-auto space-y-4 p-4 pb-42 overflow-y-auto"
+						></div>
+					)}
+					{activeView === "campus" && (
+						<CampusMap
+							onAsk={(reference) => {
+								setActiveReference(reference);
+								setActiveView("chat");
+								setIsChatboxCentered(false);
+								setInputValue("");
+							}}
+						/>
+					)}
 				</main>
 
+				{activeView === "chat" && (
 				<div
 					className={`w-full max-w-[95vw] p-2 pt-0 transition-all duration-300 ${
 						isChatboxCentered
@@ -387,15 +409,23 @@ export default function App() {
 							}
 							onInputChange={(value) => setInputValue(value)}
 							onEndpointChange={setApiEndpoint}
+							activeReference={activeReference}
+							onClearReference={() => setActiveReference(null)}
 							onSubmit={async (value) => {
 								if (!value.trim()) return;
+
+								let finalValue = value.trim();
+								if (activeReference) {
+									finalValue = `${activeReference}, ${finalValue}`;
+									setActiveReference(null);
+								}
 
 								setShowStarter(false);
 								setIsChatboxCentered(false);
 
 								addMessageToChat(
 									"user",
-									value.trim(),
+									finalValue,
 									"bg-muted/50 dark:bg-muted/50 text-sm",
 								);
 
@@ -407,7 +437,7 @@ export default function App() {
 
 								try {
 									const fetchChat = async () => {
-										if (value.trim().toLowerCase() === "test") {
+										if (finalValue.toLowerCase() === "test") {
 											return fetch("/mdtest.md");
 										}
 										return fetch("/api/chat", {
@@ -416,14 +446,14 @@ export default function App() {
 												"Content-Type": "application/json",
 											},
 											body: JSON.stringify({
-												messages: [{ role: "user", content: value }],
+												messages: [{ role: "user", content: finalValue }],
 												history: chatHistory,
 											}),
 										});
 									};
 
 									// Add user message to history
-									setChatHistory((prev) => [...prev, ["user", value.trim()]]);
+									setChatHistory((prev) => [...prev, ["user", finalValue]]);
 
 									const response = await fetchChat();
 
@@ -492,7 +522,7 @@ export default function App() {
 										const noButton = feedbackDiv.querySelector(".feedback-no");
 
 										yesButton?.addEventListener("click", () => {
-											handleFeedback(value, data, "helpful");
+											handleFeedback(finalValue, data, "helpful");
 											feedbackDiv.innerHTML = `<span class="text-sm text-muted-foreground">${t("chat.feedbackThanks")}</span>`;
 										});
 
@@ -564,7 +594,7 @@ export default function App() {
 													return;
 												}
 
-												handleFeedback(value, data, reasonToSend);
+												handleFeedback(finalValue, data, reasonToSend);
 												feedbackDiv.innerHTML = `<span class="text-sm text-muted-foreground">${t("chat.feedbackThanks")}</span>`;
 											});
 
@@ -620,6 +650,7 @@ export default function App() {
 						</p>
 					)}
 				</div>
+				)}
 			</div>
 		</>
 	);

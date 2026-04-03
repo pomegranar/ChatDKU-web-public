@@ -322,6 +322,7 @@ export default function Dev() {
 	return (
 		<>
 			<Side
+				onCampusMap={() => {}}
 				onEndpointChange={setApiEndpoint}
 				currentEndpoint={apiEndpoint}
 				onNewChat={() => {
