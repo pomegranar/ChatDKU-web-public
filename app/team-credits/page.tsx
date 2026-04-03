@@ -7,14 +7,16 @@ import { BackButton } from "@/components/backButton";
 import { useLanguage } from "@/components/language-provider";
 import Link from "next/link";
 
-function ExpandToggle({ expanded, onClick }: { expanded: boolean; onClick: () => void }) {
+function ExpandToggle({
+  expanded,
+  onClick,
+}: {
+  expanded: boolean;
+  onClick: () => void;
+}) {
   const { t } = useLanguage();
   return (
-    <Button
-      variant="link"
-      className="px-0 text-sm"
-      onClick={onClick}
-    >
+    <Button variant="link" className="px-0 text-sm" onClick={onClick}>
       {expanded ? t("team.showLess") : t("team.showMore")}
     </Button>
   );
@@ -78,7 +80,10 @@ function MajorMember({
               {role}
             </p>
 
-            <ExpandToggle expanded={expanded} onClick={() => setExpanded(!expanded)} />
+            <ExpandToggle
+              expanded={expanded}
+              onClick={() => setExpanded(!expanded)}
+            />
           </div>
         )}
       </div>
@@ -233,13 +238,14 @@ export default function TeamCreditsPage() {
             <GridMember
               name="Zeyu Yu"
               classYear="Class of 2028"
+              team="Backend Team Member"
               avatar="/avatars/Zeyu.jpg"
             />
             <GridMember
               name="Kurtis Kwan"
               classYear="Class of 2027"
               team="Agent Team Member"
-              avatar="/avatars/Kurtis.jpeg"
+              avatar="/avatars/kurtis.jpeg"
             />
             <GridMember
               name="Haroon Butt"
