@@ -1,6 +1,6 @@
 "use client";
 
-import { CornerRightUp, X } from "lucide-react";
+import { CornerRightUp, Loader2, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/components/utils";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,6 +21,7 @@ export function AIInput({
   activeReference,
   onClearReference,
   disabled = false,
+  loading = false,
 }: {
   id?: string;
   placeholder?: string;
@@ -37,6 +38,7 @@ export function AIInput({
   activeReference?: string | null;
   onClearReference?: () => void;
   disabled?: boolean;
+  loading?: boolean;
 }) {
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({
     minHeight,
@@ -81,7 +83,7 @@ export function AIInput({
   }, [textareaRef, adjustHeight, onInputChange, disabled]);
 
   const handleReset = () => {
-    if (disabled) return;
+    if (disabled || loading) return;
     if (!inputValue.trim()) return;
     onSubmit?.(inputValue);
     setInputValue("");
@@ -175,19 +177,25 @@ export function AIInput({
             disabled={disabled}
           />
           <div>
-            <button
-              onClick={handleReset}
-              type="button"
-              className={cn(
-                inputButtonStyle,
-                inputValue
-                  ? "opacity-100 scale-100"
-                  : "hidden opacity-0 scale-50",
-              )}
-              disabled={disabled}
-            >
-              <CornerRightUp className="w-5 h-5" />
-            </button>
+            {loading ? (
+              <div className={cn(inputButtonStyle, "opacity-100 scale-100 cursor-default")}>
+                <Loader2 className="w-5 h-5 animate-spin" />
+              </div>
+            ) : (
+              <button
+                onClick={handleReset}
+                type="button"
+                className={cn(
+                  inputButtonStyle,
+                  inputValue
+                    ? "opacity-100 scale-100"
+                    : "hidden opacity-0 scale-50",
+                )}
+                disabled={disabled}
+              >
+                <CornerRightUp className="w-5 h-5" />
+              </button>
+            )}
           </div>
         </div>
       </div>

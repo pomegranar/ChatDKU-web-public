@@ -221,6 +221,7 @@ export default function App() {
 	const [apiEndpoint, setApiEndpoint] = useState(getStoredEndpoint());
 	const [activeView, setActiveView] = useState<"chat" | "campus">("chat");
 	const [activeReference, setActiveReference] = useState<string | null>(null);
+	const [isSending, setIsSending] = useState(false);
 	const router = useRouter();
 	const { t } = useLanguage();
 
@@ -411,8 +412,10 @@ export default function App() {
 							onEndpointChange={setApiEndpoint}
 							activeReference={activeReference}
 							onClearReference={() => setActiveReference(null)}
+							loading={isSending}
 							onSubmit={async (value) => {
-								if (!value.trim()) return;
+								if (!value.trim() || isSending) return;
+								setIsSending(true);
 
 								let finalValue = value.trim();
 								if (activeReference) {
@@ -614,6 +617,8 @@ export default function App() {
 										`Error: ${error instanceof Error ? error.message : "An unknown error occurred"}`,
 										"bg-destructive/10 dark:bg-destructive/20",
 									);
+								} finally {
+									setIsSending(false);
 								}
 							}}
 						/>
