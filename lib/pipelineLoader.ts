@@ -17,7 +17,7 @@ export const DEFAULT_PIPELINE_STEP_IDS = [
 
 export type DefaultPipelineStepId = (typeof DEFAULT_PIPELINE_STEP_IDS)[number];
 
-const STEP_DURATION_MS = 2000;
+const STEP_DURATION_MS = 3000;
 const LABEL_SWAP_MS = 180;
 const DISMISS_MS = 220;
 const STYLE_ID = "pipeline-loader-style";
@@ -30,9 +30,9 @@ const ensureStyles = () => {
 	style.innerHTML = `
     @keyframes cdkuIconCycle {
       0% { opacity: 0; transform: scale(0.92) translateY(2px) rotate(-2deg); }
-      12% { opacity: 1; transform: scale(1) translateY(0) rotate(0deg); }
-      28% { opacity: 1; transform: scale(1.02) translateY(0) rotate(0.5deg); }
-      40% { opacity: 0; transform: scale(0.98) translateY(-1px) rotate(2deg); }
+      3% { opacity: 1; transform: scale(1) translateY(0) rotate(0deg); }
+      17% { opacity: 1; transform: scale(1.02) translateY(0) rotate(0.5deg); }
+      20% { opacity: 0; transform: scale(0.98) translateY(-1px) rotate(2deg); }
       100% { opacity: 0; }
     }
     @keyframes cdkuDotPulse {
@@ -42,12 +42,12 @@ const ensureStyles = () => {
     }
     .cdku-pipeline { transition: opacity ${DISMISS_MS}ms ease-out, transform ${DISMISS_MS}ms ease-out; }
     .cdku-pipeline.is-dismissing { opacity: 0; transform: translateY(-4px); }
-    .cdku-pipeline .icon-cycle { animation: cdkuIconCycle 2400ms linear infinite; }
+    .cdku-pipeline .icon-cycle { animation: cdkuIconCycle ${STEP_DURATION_MS * 5}ms linear infinite; }
     .cdku-pipeline .icon-1 { animation-delay: 0ms; }
-    .cdku-pipeline .icon-2 { animation-delay: 480ms; }
-    .cdku-pipeline .icon-3 { animation-delay: 960ms; }
-    .cdku-pipeline .icon-4 { animation-delay: 1440ms; }
-    .cdku-pipeline .icon-5 { animation-delay: 1920ms; }
+    .cdku-pipeline .icon-2 { animation-delay: ${STEP_DURATION_MS}ms; }
+    .cdku-pipeline .icon-3 { animation-delay: ${STEP_DURATION_MS * 2}ms; }
+    .cdku-pipeline .icon-4 { animation-delay: ${STEP_DURATION_MS * 3}ms; }
+    .cdku-pipeline .icon-5 { animation-delay: ${STEP_DURATION_MS * 4}ms; }
     .cdku-pipeline .dot { width: 3px; height: 3px; border-radius: 9999px; background-color: currentColor; display: inline-block; margin-left: 3px; opacity: 0.2; animation: cdkuDotPulse 1200ms ease-in-out infinite; }
     .cdku-pipeline .dot:nth-child(2) { animation-delay: 150ms; }
     .cdku-pipeline .dot:nth-child(3) { animation-delay: 300ms; }
@@ -100,8 +100,7 @@ export const startPipelineLoader = (
 ): PipelineLoaderController => {
 	ensureStyles();
 
-	const wrapper =
-		root?.querySelector<HTMLElement>(".cdku-pipeline") ?? null;
+	const wrapper = root?.querySelector<HTMLElement>(".cdku-pipeline") ?? null;
 	const labelEl =
 		root?.querySelector<HTMLElement>("[data-pipeline-label]") ?? null;
 
