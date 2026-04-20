@@ -4,25 +4,31 @@
 export const promptsEn = [
 	{
 		icon: "✅",
-		text: "What are the English requirements and accepted tests for gsi applicants?",
+		text: "What are the English requirements and accepted tests for Global Summer Institute (GSI) applicants?",
 	},
 	{
 		icon: "🇬",
-		text: "Is TOEFL or IELTS required or optional for gsi admission?",
+		text: "Is TOEFL or IELTS required or optional for Global Summer Institute (GSI) admission?",
 	},
-	{ icon: "🏫", text: "What is the class size for each gsi program?" },
-	{ icon: "⏰", text: "How and when are gsi admission results released?" },
+	{
+		icon: "🏫",
+		text: "What is the class size for each Global Summer Institute (GSI) program?",
+	},
+	{
+		icon: "⏰",
+		text: "How and when are Global Summer Institute (GSI) admission results released?",
+	},
 	{
 		icon: "💰",
-		text: "What costs are covered by gsi tuition, and what are not included?",
+		text: "What costs are covered by Global Summer Institute (GSI) tuition, and what are not included?",
 	},
 	{
 		icon: "🧧",
-		text: "Are there scholarships or financial aid options for gsi?",
+		text: "Are there scholarships or financial aid options for Global Summer Institute (GSI)?",
 	},
 	{
 		icon: "💳",
-		text: "What are the application fee, deposit, and payment rules for gsi?",
+		text: "What are the application fee, deposit, and payment rules for Global Summer Institute (GSI)?",
 	},
 	{
 		icon: "💫",
