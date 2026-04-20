@@ -28,6 +28,7 @@ import {
 	type MessageVariant,
 } from "@/components/chat/chat-message";
 import { PipelineLoaderMessage } from "@/components/chat/pipeline-loader-message";
+import { ThinkingBox } from "@/components/chat/thinking-box";
 import { FeedbackPrompt } from "@/components/chat/feedback-prompt";
 
 import { getStoredEndpoint } from "@/lib/convos";
@@ -78,6 +79,9 @@ export function ChatPage({
 	const [messages, setMessages] = useState<ChatMessageState[]>([]);
 	const [pipelineActive, setPipelineActive] = useState(false);
 	const [pipelineDismissing, setPipelineDismissing] = useState(false);
+	const [thinkingActive, setThinkingActive] = useState(false);
+	const [thinkingDismissing, setThinkingDismissing] = useState(false);
+	const [thinkingContent, setThinkingContent] = useState("");
 
 	const [showStarter, setShowStarter] = useState(true);
 	const [isChatboxCentered, setIsChatboxCentered] = useState(true);
@@ -119,7 +123,7 @@ export function ChatPage({
 
 	useEffect(() => {
 		scrollToBottom();
-	}, [messages, pipelineActive, scrollToBottom]);
+	}, [messages, pipelineActive, thinkingActive, scrollToBottom]);
 
 	const nextId = useCallback(() => {
 		messageIdCounter.current += 1;
@@ -213,33 +217,53 @@ export function ChatPage({
 				// Dismiss the pipeline loader (awaits fade-out).
 				await dismissPipeline(setPipelineDismissing, setPipelineActive);
 
-				const botId = pushMessage({ role: "bot", content: "" });
+				// Show the thinking box and stream raw tokens into it.
+				setThinkingContent("");
+				setThinkingDismissing(false);
+				setThinkingActive(true);
 
-				const streamResult = await streamFromReader(response, (accumulated) =>
-					updateMessage(botId, { content: accumulated }),
-				);
+				let fullText = "";
+				const streamResult = await streamFromReader(response, (accumulated) => {
+					fullText = accumulated;
+					setThinkingContent(accumulated);
+				});
 
-				let data = streamResult.text;
 				if (!streamResult.success) {
-					if (!data) {
+					fullText = streamResult.text;
+					if (!fullText) {
 						try {
-							data = await response.text();
+							fullText = await response.text();
 						} catch {
-							data = "Error: Failed to read response";
+							fullText = "Error: Failed to read response";
 						}
 					}
+				}
+
+				// Dismiss thinking box, then reveal the fully-rendered message.
+				await dismissThinking(
+					setThinkingDismissing,
+					setThinkingActive,
+					setThinkingContent,
+				);
+
+				const botId = pushMessage({ role: "bot", content: fullText });
+
+				if (!streamResult.success && fullText) {
 					updateMessage(botId, { content: "" });
 					await streamText(
-						data,
+						fullText,
 						(accumulated) => updateMessage(botId, { content: accumulated }),
 						resolvedChunkDelay,
 					);
 				}
 
-				setChatHistory((prev) => [...prev, ["bot", data]]);
+				setChatHistory((prev) => [...prev, ["bot", fullText]]);
 				updateMessage(botId, { showFeedback: true });
 			} catch (error) {
 				await dismissPipeline(setPipelineDismissing, setPipelineActive);
+				setThinkingActive(false);
+				setThinkingDismissing(false);
+				setThinkingContent("");
 				pushMessage({
 					role: "bot",
 					variant: "error",
@@ -269,6 +293,9 @@ export function ChatPage({
 		setMessages([]);
 		setPipelineActive(false);
 		setPipelineDismissing(false);
+		setThinkingActive(false);
+		setThinkingDismissing(false);
+		setThinkingContent("");
 	};
 
 	return (
@@ -322,6 +349,12 @@ export function ChatPage({
 								<PipelineLoaderMessage
 									steps={pipelineSteps}
 									dismissing={pipelineDismissing}
+								/>
+							)}
+							{thinkingActive && (
+								<ThinkingBox
+									content={thinkingContent}
+									dismissing={thinkingDismissing}
 								/>
 							)}
 						</div>
@@ -430,6 +463,19 @@ const dismissPipeline = async (
 	await new Promise((r) => setTimeout(r, 240));
 	setActive(false);
 	setDismissing(false);
+};
+
+// Mirrors dismissPipeline for the thinking box (240ms CSS transition + buffer).
+const dismissThinking = async (
+	setDismissing: (v: boolean) => void,
+	setActive: (v: boolean) => void,
+	setContent: (v: string) => void,
+) => {
+	setDismissing(true);
+	await new Promise((r) => setTimeout(r, 260));
+	setActive(false);
+	setDismissing(false);
+	setContent("");
 };
 
 export default ChatPage;
