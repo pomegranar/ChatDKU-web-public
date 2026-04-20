@@ -34,6 +34,40 @@ export interface StreamResult {
 	text: string;
 }
 
+export interface ParsedStream {
+	/** Content of all leading [THINKING]: lines, joined by newlines. */
+	thinking: string;
+	/** Everything after the last [THINKING]: line, trimmed. */
+	response: string;
+}
+
+// Splits an accumulated stream string into intermediary thinking content and
+// the actual response. Lines at the start of the text that begin with the
+// "[THINKING]:" prefix are treated as agent-step events; the remainder is
+// the response. If no such lines are present, `thinking` is "" and `response`
+// is the full text — preserving original streaming behavior as a fallback.
+export const parseThinkingStream = (text: string): ParsedStream => {
+	const lines = text.split("\n");
+	const thinkingLines: string[] = [];
+	let responseStart = -1;
+
+	for (let i = 0; i < lines.length; i++) {
+		if (lines[i].startsWith("[THINKING]:")) {
+			thinkingLines.push(lines[i].slice("[THINKING]:".length));
+		} else {
+			responseStart = i;
+			break;
+		}
+	}
+
+	const response =
+		responseStart >= 0
+			? lines.slice(responseStart).join("\n").trimStart()
+			: "";
+
+	return { thinking: thinkingLines.join("\n"), response };
+};
+
 // Reads a streaming Response body, invoking `onProgress` with the accumulated
 // text each time a chunk arrives. Returns accumulated text plus whether
 // streaming succeeded; on failure the caller is expected to fall back to

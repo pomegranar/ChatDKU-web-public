@@ -35,6 +35,7 @@ import { getStoredEndpoint } from "@/lib/convos";
 import {
 	buildPipelineSteps,
 	configureMarked,
+	parseThinkingStream,
 	streamFromReader,
 	streamText,
 } from "@/lib/chat-stream";
@@ -217,48 +218,92 @@ export function ChatPage({
 				// Dismiss the pipeline loader (awaits fade-out).
 				await dismissPipeline(setPipelineDismissing, setPipelineActive);
 
-				// Show the thinking box and stream raw tokens into it.
-				setThinkingContent("");
-				setThinkingDismissing(false);
-				setThinkingActive(true);
+				// bot message is created lazily: only once response text arrives so
+				// the DOM never contains an empty message container.
+				let botId: string | null = null;
+				const ensureBotId = (): string => {
+					if (!botId) botId = pushMessage({ role: "bot", content: "" });
+					return botId;
+				};
 
-				let fullText = "";
-				const streamResult = await streamFromReader(response, (accumulated) => {
-					fullText = accumulated;
-					setThinkingContent(accumulated);
-				});
+				// Track thinking-box state via local flags (avoids stale-closure issues
+				// with React state reads inside the onProgress callback).
+				let hasThinking = false;
+				let thinkingDismissScheduled = false;
+				let fullResponseText = "";
 
-				if (!streamResult.success) {
-					fullText = streamResult.text;
-					if (!fullText) {
-						try {
-							fullText = await response.text();
-						} catch {
-							fullText = "Error: Failed to read response";
+				const streamResult = await streamFromReader(
+					response,
+					(accumulated) => {
+						const { thinking, response: responseText } =
+							parseThinkingStream(accumulated);
+						fullResponseText = responseText;
+
+						// Activate thinking box on first [THINKING]: line.
+						if (thinking && !hasThinking) {
+							hasThinking = true;
+							setThinkingDismissing(false);
+							setThinkingActive(true);
 						}
-					}
-				}
+						if (hasThinking) setThinkingContent(thinking);
 
-				// Dismiss thinking box, then reveal the fully-rendered message.
-				await dismissThinking(
-					setThinkingDismissing,
-					setThinkingActive,
-					setThinkingContent,
+						// As soon as response text begins, schedule thinking-box dismissal
+						// and start streaming the response as markdown simultaneously.
+						if (responseText && hasThinking && !thinkingDismissScheduled) {
+							thinkingDismissScheduled = true;
+							setThinkingDismissing(true);
+							setTimeout(() => {
+								setThinkingActive(false);
+								setThinkingDismissing(false);
+								setThinkingContent("");
+							}, 260);
+						}
+
+						// No [THINKING]: markers → identical to original streaming behavior.
+						// Has markers → stream response into the bot message as markdown.
+						if (responseText || !hasThinking) {
+							updateMessage(ensureBotId(), {
+								content: responseText || accumulated,
+							});
+						}
+					},
 				);
 
-				const botId = pushMessage({ role: "bot", content: fullText });
+				// Edge case: stream ended with only thinking lines and no response.
+				if (hasThinking && !thinkingDismissScheduled) {
+					await dismissThinking(
+						setThinkingDismissing,
+						setThinkingActive,
+						setThinkingContent,
+					);
+				}
 
-				if (!streamResult.success && fullText) {
-					updateMessage(botId, { content: "" });
+				// Fallback when real streaming failed.
+				if (!streamResult.success) {
+					let fallback = streamResult.text
+						? parseThinkingStream(streamResult.text).response ||
+							streamResult.text
+						: "";
+					if (!fallback) {
+						try {
+							fallback = await response.text();
+						} catch {
+							fallback = "Error: Failed to read response";
+						}
+					}
+					fullResponseText = fallback;
+					const id = ensureBotId();
+					updateMessage(id, { content: "" });
 					await streamText(
-						fullText,
-						(accumulated) => updateMessage(botId, { content: accumulated }),
+						fallback,
+						(acc) => updateMessage(id, { content: acc }),
 						resolvedChunkDelay,
 					);
 				}
 
-				setChatHistory((prev) => [...prev, ["bot", fullText]]);
-				updateMessage(botId, { showFeedback: true });
+				const finalBotId = ensureBotId();
+				setChatHistory((prev) => [...prev, ["bot", fullResponseText]]);
+				updateMessage(finalBotId, { showFeedback: true });
 			} catch (error) {
 				await dismissPipeline(setPipelineDismissing, setPipelineActive);
 				setThinkingActive(false);

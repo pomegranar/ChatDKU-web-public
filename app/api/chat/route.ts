@@ -124,16 +124,27 @@ export async function POST(request: Request) {
 		// the pipeline loader stays visible for a realistic duration.
 		await new Promise((resolve) => setTimeout(resolve, 3000));
 
-		// Stream in ~4-char token-sized chunks at LLM-like speed to keep the
-		// thinking box visible for several seconds.
+		// Thinking-box simulation: emit [THINKING]: step lines first, then
+		// stream the response at LLM-like speed so the full UI flow is exercised.
+		const thinkingSteps = [
+			"[THINKING]:Planning your query...",
+			"[THINKING]:Searching knowledge base for relevant documents...",
+			"[THINKING]:Querying course and policy database...",
+			"[THINKING]:Synthesizing response...",
+		];
+
 		const stream = new ReadableStream({
 			async start(controller) {
-				const tokens: string[] = [];
-				for (let i = 0; i < fullText.length; i += 4) {
-					tokens.push(fullText.slice(i, i + 4));
+				// Emit each step on its own line with a brief pause so the user
+				// can read them one at a time in the thinking box.
+				for (const step of thinkingSteps) {
+					controller.enqueue(encoder.encode(step + "\n"));
+					await new Promise((resolve) => setTimeout(resolve, 400));
 				}
-				for (const token of tokens) {
-					controller.enqueue(encoder.encode(token));
+
+				// Stream the actual response in ~4-char chunks at realistic speed.
+				for (let i = 0; i < fullText.length; i += 4) {
+					controller.enqueue(encoder.encode(fullText.slice(i, i + 4)));
 					await new Promise((resolve) => setTimeout(resolve, 25));
 				}
 				controller.close();
