@@ -48,7 +48,7 @@ export default function LoginPage() {
 			setIsLoading(true);
 			// Set cookie for terms acceptance - expires in 60 days
 			Cookies.set("terms_accepted", "true", { expires: 60 });
-			// Fetch JWT so the Python chat API allows requests
+			// Fetch service JWT so the public chat API allows requests
 			try {
 				const res = await fetch("/api/auth/token");
 				if (!res.ok) throw new Error(`Token fetch failed: ${res.status}`);
@@ -61,6 +61,7 @@ export default function LoginPage() {
 					}
 				} catch {}
 				Cookies.set("chatdku_token", token, { expires });
+				Cookies.set("chatdku_auth_type", "guest", { expires });
 			} catch (e) {
 				console.error("JWT fetch failed:", e);
 				toast.error(t("login.serverError"));
@@ -69,6 +70,17 @@ export default function LoginPage() {
 			}
 			router.push("/app");
 		}
+	};
+
+	const handleNetIDLogin = () => {
+		if (!termsAccepted) return;
+		setIsDukeLoading(true);
+		Cookies.set("terms_accepted", "true", { expires: 60 });
+		const ssoBase =
+			process.env.NEXT_PUBLIC_SSO_REDIRECT_URL ||
+			"https://chatdku.dukekunshan.edu.cn/auth/sso-redirect";
+		const returnUrl = `${window.location.origin}/auth/callback`;
+		window.location.href = `${ssoBase}?return_url=${encodeURIComponent(returnUrl)}`;
 	};
 
 	return (
@@ -167,11 +179,7 @@ export default function LoginPage() {
 										variant="default"
 										className="rounded-full p-6 bg-blue-700 text-white hover:bg-blue-500 border border-blue-300/30 disabled:bg-transparent disabled:text-foreground disabled:border-border"
 										disabled={!termsAccepted || isLoading || isDukeLoading}
-										onClick={() => {
-											setIsDukeLoading(true);
-											window.location.href =
-												"https://chatdku.dukekunshan.edu.cn/";
-										}}
+										onClick={handleNetIDLogin}
 									>
 										{isDukeLoading ? (
 											<Loader2 className="animate-spin" />
