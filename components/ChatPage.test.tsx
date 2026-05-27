@@ -15,7 +15,7 @@ jest.mock("js-cookie", () => ({
   set: jest.fn(),
 }));
 
-jest.mock("@/lib/convosNew", () => ({
+jest.mock("@/lib/convos", () => ({
   getNewSession: jest.fn(),
   getCurrentSessionId: jest.fn(),
   getStoredEndpoint: jest.fn(),
@@ -64,12 +64,12 @@ jest.mock("@/components/side", () => ({
   ),
 }));
 
-jest.mock("@/components/WelcomeBanner", () => ({
+jest.mock("@/components/welcome-banner", () => ({
   __esModule: true,
   default: () => <div data-testid="welcome-banner">Welcome</div>,
 }));
 
-jest.mock("@/components/prompt_recs", () => ({
+jest.mock("@/components/prompt-recs", () => ({
   PromptRecs: ({ onPromptSelect }: any) => (
     <div>
       <button onClick={() => onPromptSelect("Test prompt")}>Test Prompt</button>
@@ -99,7 +99,7 @@ describe("App", () => {
     (Cookies.get as jest.Mock).mockReturnValue("true"); // terms accepted
 
     // Mock successful session
-    const { getNewSession } = require("@/lib/convosNew");
+    const { getNewSession } = require("@/lib/convos");
     getNewSession.mockResolvedValue("test-session-id");
 
     // Setup DOM for chat log
@@ -143,7 +143,7 @@ describe("App", () => {
   });
 
   it("handles session error state", async () => {
-    const { getNewSession } = require("@/lib/convosNew");
+    const { getNewSession } = require("@/lib/convos");
     getNewSession.mockResolvedValue(null);
 
     render(<App />);
@@ -184,7 +184,7 @@ describe("App", () => {
   });
 
   it("handles new chat creation", async () => {
-    const { getNewSession } = require("@/lib/convosNew");
+    const { getNewSession } = require("@/lib/convos");
     getNewSession.mockResolvedValue("new-session-id");
 
     render(<App />);
@@ -229,7 +229,7 @@ describe("App", () => {
   });
 
   it("disables input when session is not ready", async () => {
-    const { getNewSession } = require("@/lib/convosNew");
+    const { getNewSession } = require("@/lib/convos");
     getNewSession.mockResolvedValue(null);
 
     render(<App />);
@@ -241,7 +241,7 @@ describe("App", () => {
   });
 
   it("handles retry session functionality", async () => {
-    const { getNewSession } = require("@/lib/convosNew");
+    const { getNewSession } = require("@/lib/convos");
     getNewSession.mockResolvedValueOnce(null); // Initial failure
     getNewSession.mockResolvedValueOnce("retry-session-id"); // Retry success
 
@@ -260,7 +260,7 @@ describe("App", () => {
   });
 
   it("loads conversation history when selected", async () => {
-    const { getSessionMessages } = require("@/lib/convosNew");
+    const { getSessionMessages } = require("@/lib/convos");
     const mockMessages = [
       { role: "user", content: "Hello", timestamp: "2024-01-01" },
       { role: "bot", content: "Hi there!", timestamp: "2024-01-01" },

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
-import { BackButton } from "./backButton";
+import { BackButton } from "./back-button";
 import { useLanguage } from "@/components/language-provider";
 
 type AboutProps = {
@@ -172,7 +172,7 @@ export function TermsButton() {
 							<strong>Continuous Improvement:</strong> ChatDKU
 							continuously evolves based on user feedback and
 							technological advancements. Users are invited to contribute
-							to the platform's development through suggestions for
+							to the platform&apos;s development through suggestions for
 							improvements and additional resources.
 						</li>
 						<li>
