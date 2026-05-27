@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -64,95 +63,6 @@ function NavLinks({ className }: Props) {
 
 export default function IntroPage() {
 	const { t } = useLanguage();
-	const iframeRef = useRef<HTMLIFrameElement>(null);
-
-	useEffect(() => {
-		const iframe = iframeRef.current;
-		if (!iframe) return;
-
-		const existing = document.querySelector(
-			'script[src="https://www.youtube.com/iframe_api"]',
-		);
-		if (!existing) {
-			const tag = document.createElement("script");
-			tag.src = "https://www.youtube.com/iframe_api";
-			document.body.appendChild(tag);
-		}
-
-		interface YTPlayer {
-			mute(): void;
-			playVideo(): void;
-			seekTo(seconds: number, allowSeekAhead: boolean): void;
-			getCurrentTime(): number;
-			destroy(): void;
-		}
-		interface YTEvent {
-			target: YTPlayer;
-			data: number;
-		}
-		interface YTApi {
-			Player: new (
-				el: HTMLIFrameElement,
-				opts: {
-					events: {
-						onReady: (e: YTEvent) => void;
-						onStateChange: (e: YTEvent) => void;
-					};
-				},
-			) => YTPlayer;
-			PlayerState: { ENDED: number };
-		}
-		type YTWindow = Window & {
-			YT?: YTApi;
-			onYouTubeIframeAPIReady?: () => void;
-		};
-
-		let player: YTPlayer | undefined;
-		let interval: ReturnType<typeof setInterval> | null = null;
-		const END_SECONDS = 112;
-		const w = window as YTWindow;
-
-		const createPlayer = () => {
-			const YT = w.YT;
-			if (!YT || !YT.Player || !iframeRef.current) return;
-			player = new YT.Player(iframeRef.current, {
-				events: {
-					onReady: (e) => {
-						e.target.mute();
-						e.target.playVideo();
-					},
-					onStateChange: (e) => {
-						if (e.data === YT.PlayerState.ENDED) {
-							e.target.seekTo(0, true);
-							e.target.playVideo();
-						}
-					},
-				},
-			});
-			interval = setInterval(() => {
-				if (!player || typeof player.getCurrentTime !== "function") return;
-				if (player.getCurrentTime() >= END_SECONDS) {
-					player.seekTo(0, true);
-					player.playVideo();
-				}
-			}, 250);
-		};
-
-		if (w.YT && w.YT.Player) {
-			createPlayer();
-		} else {
-			const prev = w.onYouTubeIframeAPIReady;
-			w.onYouTubeIframeAPIReady = () => {
-				if (typeof prev === "function") prev();
-				createPlayer();
-			};
-		}
-
-		return () => {
-			if (interval) clearInterval(interval);
-			if (player && typeof player.destroy === "function") player.destroy();
-		};
-	}, []);
 
 	return (
 		<div className="min-h-screen bg-background font-inter text-foreground">
@@ -229,16 +139,6 @@ export default function IntroPage() {
 						</div>
 					</div>
 					<div className="lg:max-w-2/5 text-right md:pl-6 mt-6 scale-105 md:scale-100">
-						{/* <iframe */}
-						{/* 	ref={iframeRef} */}
-						{/* 	src="https://www.youtube.com/embed/SdItulvqdLo?enablejsapi=1&autoplay=1&mute=1&controls=1&playsinline=1&modestbranding=1&rel=0&end=112" */}
-						{/* 	title="Introducing ChatDKU: Your AI Assistant at Duke Kunshan University" */}
-						{/* 	allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" */}
-						{/* 	referrerPolicy="strict-origin-when-cross-origin" */}
-						{/* 	allowFullScreen */}
-						{/* 	style={{ aspectRatio: "16 / 9" }} */}
-						{/* 	className="w-full h-auto rounded-sm border-0" */}
-						{/* /> */}
 						<video
 							autoPlay
 							muted
@@ -274,50 +174,6 @@ export default function IntroPage() {
 					/>
 				</div>
 			</section>
-
-			{/* ── The Problem ── */}
-			{/* <section className="py-16 px-4 from-neutral-500/30 bg-gradient-to-b to-lime-500/5"> */}
-			{/* 	<div className="max-w-5xl mx-auto"> */}
-			{/* 		<div className="text-center mb-10"> */}
-			{/* 			<h2 className="text-2xl md:text-3xl font-bold mb-2"> */}
-			{/* 				{t("home.problem.title")} */}
-			{/* 			</h2> */}
-			{/* 		</div> */}
-			{/* 		<div className="grid grid-cols-1 md:grid-cols-3 gap-4"> */}
-			{/* 			{[ */}
-			{/* 				{ */}
-			{/* 					icon: FileText, */}
-			{/* 					title: t("home.problem.pdf.title"), */}
-			{/* 					desc: t("home.problem.pdf.desc"), */}
-			{/* 				}, */}
-			{/* 				{ */}
-			{/* 					icon: Globe, */}
-			{/* 					title: t("home.problem.tabs.title"), */}
-			{/* 					desc: t("home.problem.tabs.desc"), */}
-			{/* 				}, */}
-			{/* 				{ */}
-			{/* 					icon: MapPin, */}
-			{/* 					title: t("home.problem.office.title"), */}
-			{/* 					desc: t("home.problem.office.desc"), */}
-			{/* 				}, */}
-			{/* 			].map(({ icon: Icon, title, desc }) => ( */}
-			{/* 				<div */}
-			{/* 					key={title} */}
-			{/* 					className="bg-background rounded-2xl p-6 border shadow-sm" */}
-			{/* 				> */}
-			{/* 					<div className="flex flex-row items-center space-x-2"> */}
-			{/* 						<Icon className="text-muted-foreground" /> */}
-			{/* 						<h3 className="font-semibold">{title}</h3> */}
-			{/* 					</div> */}
-			{/* 					<p className="text-sm text-muted-foreground">{desc}</p> */}
-			{/* 				</div> */}
-			{/* 			))}{" "} */}
-			{/* 		</div>{" "} */}
-			{/* 		<p className="text-center italic text-lg mt-6"> */}
-			{/* 			{t("home.problem.coda")} */}
-			{/* 		</p> */}
-			{/* 	</div> */}
-			{/* </section> */}
 
 			{/* ── The Solution ── */}
 			<section className="py-16 px-4" id="agent">
@@ -620,9 +476,6 @@ export default function IntroPage() {
 						<h2 className="text-2xl md:text-3xl font-bold mb-2">
 							{t("home.roadmap.title")}
 						</h2>
-						{/* <p className="text-muted-foreground"> */}
-						{/* 	{t("home.roadmap.subtitle")} */}
-						{/* </p> */}
 					</div>
 					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 						{[
