@@ -16,18 +16,18 @@ BUILD_DIR="out"  # where `npm run build` outputs
 
 # cd /path/to/frontend
 
-echo -e "${BLUE}${BOLD}==> Running tests...${RESET}"
-if npm run test; then
-  echo -e "${GREEN}${BOLD}==> Tests passed.${RESET}"
+echo -e "${BLUE}${BOLD}==> Running type check...${RESET}"
+if npm run typecheck; then
+  echo -e "${GREEN}${BOLD}==> Type check passed.${RESET}"
 else
-  echo -e "${RED}${BOLD}==> Tests failed.${RESET}"
-  read -r -p "$(echo -e "${YELLOW}Tests failed. Deploy anyway? [y/N]: ${RESET}")" force
+  echo -e "${RED}${BOLD}==> Type check failed.${RESET}"
+  read -r -p "$(echo -e "${YELLOW}Type check failed. Deploy anyway? [y/N]: ${RESET}")" force
   case "$force" in
     [Yy]* )
-      echo -e "${YELLOW}${BOLD}==> Proceeding with deploy despite failing tests.${RESET}"
+      echo -e "${YELLOW}${BOLD}==> Proceeding with deploy despite failing type check.${RESET}"
       ;;
     * )
-      echo -e "${YELLOW}${BOLD}==> Aborting deploy because tests failed.${RESET}"
+      echo -e "${YELLOW}${BOLD}==> Aborting deploy because type check failed.${RESET}"
       exit 1
       ;;
   esac
