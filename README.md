@@ -8,6 +8,26 @@ We're using the [shadcn/ui](https://ui.shadcn.com/) open-source UI library. This
 
 Try to stick to these shadcn/ui components as much as possible, and only create custom components when necessary. This is to keep accessibility standards and consistency.
 
+## Route map
+
+The app uses the Next.js App Router (`app/`). Pages:
+
+| Route           | File                        | Purpose                                                                 |
+| --------------- | --------------------------- | ----------------------------------------------------------------------- |
+| `/`             | `app/page.tsx`              | Marketing landing page (sections live in `components/landing/`)         |
+| `/login`        | `app/login/page.tsx`        | Guest login / terms acceptance                                          |
+| `/app`          | `app/app/page.tsx`          | Main chat app (`<ChatPage enableCampusMap />`)                          |
+| `/dev`          | `app/dev/page.tsx`          | Chat app in dev mode (mock responses, no token required)                |
+| `/about`        | `app/about/page.tsx`        | About ChatDKU                                                           |
+| `/team-credits` | `app/team-credits/page.tsx` | Team credits                                                            |
+| `/chat`         | `app/chat/page.tsx`         | Redirect → `/app` (legacy path)                                         |
+| `/landing`      | `app/landing/page.tsx`      | Redirect → `/login` (legacy path)                                       |
+
+The chat UI is one shared component (`components/chat-page.tsx`) configured by
+props; `/app` and `/dev` are thin wrappers around it. API routes live under
+`app/api/` (`chat`, `auth/token`, `feedback`, `campus-map`, `get_session`,
+`c/[[...path]]`).
+
 ## Development Guide:
 
 ### Dependencies:
