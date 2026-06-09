@@ -1,67 +1,81 @@
-export type MarkerType = "building" | "office" | "printer";
+export type MarkerType = "building" | "office" | "printer" | "amenity";
 
 export type SubItem = {
-	name: string;
-	description: string;
-	hours?: string;
-	location: string;
-	image?: string;
-	introduction?: string;
+  name: string;
+  description: string;
+  hours?: string;
+  location: string;
+  image?: string;
+  introduction?: string;
+  // Chinese translations (reserved for future use)
+  nameZh?: string;
+  descriptionZh?: string;
+  hoursZh?: string;
+  locationZh?: string;
+  introductionZh?: string;
 };
 
 export type Marker = {
-	id: number;
-	type: MarkerType;
-	top: number;
-	left: number;
-	items: SubItem[];
+  id: number;
+  type: MarkerType;
+  top: number;
+  left: number;
+  items: SubItem[];
 };
 
 export type ExtraOfficeItem = SubItem & { id: string };
 
 export type ListItem = SubItem & {
-	markerId: number;
-	markerType: Marker["type"];
-	itemIndex: number;
-	id?: string;
+  markerId: number;
+  markerType: Marker["type"];
+  itemIndex: number;
+  id?: string;
 };
 
 /**
- * Flatten the markers (and standalone office items) for the current filter into
- * a single list. Offices additionally fold in `extraOfficeItems` and are sorted
- * alphabetically; buildings and printers keep their marker order.
+ * Flatten markers (and standalone office items) for the current filter into a
+ * single list. Offices additionally fold in `extraOfficeItems` and are sorted
+ * alphabetically; amenities keep their marker order.
+ * Adds a safeguard against undefined markers array.
  */
 export function buildListItems(
-	selectedType: MarkerType,
-	markers: Marker[],
-	extraOfficeItems: ExtraOfficeItem[],
+  selectedType: MarkerType,
+  markers: Marker[],
+  extraOfficeItems: ExtraOfficeItem[],
 ): ListItem[] {
-	if (selectedType === "building" || selectedType === "printer") {
-		return markers.flatMap((marker) =>
-			marker.items.map((item, idx) => ({
-				...item,
-				markerId: marker.id,
-				markerType: marker.type,
-				itemIndex: idx,
-			})),
-		);
-	}
+  const safeMarkers = markers || [];
 
-	const officeItems = markers.flatMap((marker) =>
-		marker.items.map((item, idx) => ({
-			...item,
-			markerId: marker.id,
-			markerType: marker.type,
-			itemIndex: idx,
-		})),
-	);
-	const extraItems = extraOfficeItems.map((item) => ({
-		...item,
-		markerId: -1,
-		markerType: "office" as const,
-		itemIndex: -1,
-	}));
-	return [...officeItems, ...extraItems].sort((a, b) =>
-		a.name.localeCompare(b.name),
-	);
+  if (selectedType === "building" || selectedType === "printer" || selectedType === "amenity") {
+    return safeMarkers
+      .filter((m) => m.type === selectedType)
+      .flatMap((marker) =>
+        marker.items.map((item, idx) => ({
+          ...item,
+          markerId: marker.id,
+          markerType: marker.type,
+          itemIndex: idx,
+        })),
+      );
+  }
+
+  // Office: combine marked offices + extra items, sort alphabetically
+  const officeItems = safeMarkers
+    .filter((m) => m.type === "office")
+    .flatMap((marker) =>
+      marker.items.map((item, idx) => ({
+        ...item,
+        markerId: marker.id,
+        markerType: marker.type,
+        itemIndex: idx,
+      })),
+    );
+  const extraItems = (extraOfficeItems || []).map((item) => ({
+    ...item,
+    markerId: -1,
+    markerType: "office" as const,
+    itemIndex: -1,
+  }));
+  return [...officeItems, ...extraItems].sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
 }
