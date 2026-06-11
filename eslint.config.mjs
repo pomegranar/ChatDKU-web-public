@@ -11,10 +11,6 @@ const config = [
 			"build/**",
 			"coverage/**",
 			"next-env.d.ts",
-			"**/*.test.ts",
-			"**/*.test.tsx",
-			"jest.setup.js",
-			"jest.config.js",
 		],
 	},
 ];

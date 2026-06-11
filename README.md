@@ -8,6 +8,26 @@ We're using the [shadcn/ui](https://ui.shadcn.com/) open-source UI library. This
 
 Try to stick to these shadcn/ui components as much as possible, and only create custom components when necessary. This is to keep accessibility standards and consistency.
 
+## Route map
+
+The app uses the Next.js App Router (`app/`). Pages:
+
+| Route           | File                        | Purpose                                                                 |
+| --------------- | --------------------------- | ----------------------------------------------------------------------- |
+| `/`             | `app/page.tsx`              | Marketing landing page (sections live in `components/landing/`)         |
+| `/login`        | `app/login/page.tsx`        | Guest login / terms acceptance                                          |
+| `/app`          | `app/app/page.tsx`          | Main chat app (`<ChatPage enableCampusMap />`)                          |
+| `/dev`          | `app/dev/page.tsx`          | Chat app in dev mode (mock responses, no token required)                |
+| `/about`        | `app/about/page.tsx`        | About ChatDKU                                                           |
+| `/team-credits` | `app/team-credits/page.tsx` | Team credits                                                            |
+| `/chat`         | `app/chat/page.tsx`         | Redirect → `/app` (legacy path)                                         |
+| `/landing`      | `app/landing/page.tsx`      | Redirect → `/login` (legacy path)                                       |
+
+The chat UI is one shared component (`components/chat-page.tsx`) configured by
+props; `/app` and `/dev` are thin wrappers around it. API routes live under
+`app/api/` (`chat`, `auth/token`, `feedback`, `campus-map`, `get_session`,
+`c/[[...path]]`).
+
 ## Development Guide:
 
 ### Dependencies:
@@ -19,12 +39,12 @@ Try to stick to these shadcn/ui components as much as possible, and only create 
 1. Run `npm install` in the frontend directory to install Node dependencies.
 2. Run `npm run dev` to spin up a localhost server and navigate to http://localhost:3000/ to see the homepage. The dev server will hot-reload whenever you save.
 3. Make necessary edits, and review changes on both a desktop screen and a mobile screen. Test with many aspect ratios to make sure nothing clips or looks broken. You can also enter "test" in the chat box to test proper markdown rendering (this is important as users must be able to read ChatDKU's responses easily).
-4. Use `npm run test` to run all tests for essential functionality.
+4. Run `npm run typecheck` to verify types before pushing.
 5. Check that `npm run build` succeeds before pushing to the main branch.
 
 ### Deploying to production:
 
-1. Run `sudo bash deploy.sh` to run the deployment script. It will go through the entire test suite and deploy the frontend as well as create a backup of the previous deployment in case a rollback is needed.  
+1. Run `sudo bash deploy.sh` to run the deployment script. It will build and deploy the frontend as well as create a backup of the previous deployment in case a rollback is needed.  
    This backup is stored at `/var/www/chatdku_webapp_backups`
 2. Visit [ChatDKU](https://chatdku.dukekunshan.edu.cn) in incognito mode. Make sure the chat responses are clear and legible.
 

@@ -4,7 +4,7 @@ import data from "@/data/campus-markers.json";
 export async function GET(req: NextRequest) {
 	const type = req.nextUrl.searchParams.get("type");
 
-	if (type && !["building", "office", "printer"].includes(type)) {
+	if (type && !["building", "office", "printer", "amenity"].includes(type)) {
 		return NextResponse.json({ error: "Invalid type" }, { status: 400 });
 	}
 

@@ -1,6 +1,14 @@
 import { API_ENDPOINTS } from "./constants";
 
-// Session management utilities
+// Session, conversation, and endpoint utilities.
+//
+// NOTE: Several exports here back features that are currently disabled in the UI
+// (chat history and model selection) and so have no callers yet:
+//   - getNewSession, getCurrentSessionId, setCurrentSessionId, clearSessionId,
+//     getConversations  (chat history / session)
+//   - clearStoredEndpoint  (model selection)
+// They are intentionally retained for when those features are re-enabled — do
+// not delete (see CLEANUP_TODO.md item #8).
 const SESSION_STORAGE_KEY = "chatdku_session_id";
 const ENDPOINT_STORAGE_KEY = "chatdku_api_endpoint";
 
@@ -72,9 +80,8 @@ export async function getNewSession(): Promise<string | null> {
 		const sessionId = data.session_id;
 
 		if (sessionId) {
-			// Store session_id in localStorage
+			// Persist the session id in a cookie
 			setCookie(SESSION_STORAGE_KEY, sessionId);
-			console.log("New session created and stored:", sessionId);
 		}
 
 		return sessionId;
@@ -85,7 +92,7 @@ export async function getNewSession(): Promise<string | null> {
 }
 
 /**
- * Get the current session ID from storage
+ * Get the current session ID from the session cookie
  */
 export function getCurrentSessionId(): string | null {
 	if (typeof window === "undefined") return null;
@@ -93,7 +100,7 @@ export function getCurrentSessionId(): string | null {
 }
 
 /**
- * Set the current session ID in storage
+ * Set the current session ID in the session cookie
  */
 export function setCurrentSessionId(sessionId: string): void {
 	if (typeof window === "undefined") return;
@@ -101,7 +108,7 @@ export function setCurrentSessionId(sessionId: string): void {
 }
 
 /**
- * Clear the current session ID from storage
+ * Clear the current session ID cookie
  */
 export function clearSessionId(): void {
 	if (typeof window === "undefined") return;
