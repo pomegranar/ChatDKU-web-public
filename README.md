@@ -33,18 +33,21 @@ props; `/app` and `/dev` are thin wrappers around it. API routes live under
 ### Dependencies:
 
 - The latest Node.js LTS runtime must be installed on the machine you're using to develop.
+- Next.js 16.x with Turbopack is used for the build toolchain.
 
 ### Development flow:
 
 1. Run `npm install` in the frontend directory to install Node dependencies.
 2. Run `npm run dev` to spin up a localhost server and navigate to http://localhost:3000/ to see the homepage. The dev server will hot-reload whenever you save.
 3. Make necessary edits, and review changes on both a desktop screen and a mobile screen. Test with many aspect ratios to make sure nothing clips or looks broken. You can also enter "test" in the chat box to test proper markdown rendering (this is important as users must be able to read ChatDKU's responses easily).
+   - In dev mode (`/dev`), the API returns mock responses with a 40-second artificial delay to simulate the full pipeline.
+   - To use the real backend in development, set `MOCK_API=false` in `.env.local`.
 4. Run `npm run typecheck` to verify types before pushing.
 5. Check that `npm run build` succeeds before pushing to the main branch.
 
 ### Deploying to production:
 
-1. Run `sudo bash deploy.sh` to run the deployment script. It will build and deploy the frontend as well as create a backup of the previous deployment in case a rollback is needed.  
+1. Run `sudo bash manual-deploy.sh` to run the deployment script. It will build and deploy the frontend as well as create a backup of the previous deployment in case a rollback is needed.  
    This backup is stored at `/var/www/chatdku_webapp_backups`
 2. Visit [ChatDKU](https://chatdku.dukekunshan.edu.cn) in incognito mode. Make sure the chat responses are clear and legible.
 
@@ -80,10 +83,22 @@ The public-facing site is deployed on Vercel. Since the Python backend runs on a
 
 | Variable           | Purpose                                                                                                                                                                                 |
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `BACKEND_BASE_URL` | Cloudflare Tunnel hostname (e.g. `https://api.chatdku.com`)                                                                                                                             |
+| `BACKEND_BASE_URL` | Backend API hostname. Defaults to `https://chatdku.dukekunshan.edu.cn:8999` in dev, or `https://api.chatdku.com` (Cloudflare Tunnel) in production.                                     |
 | `JWT_SECRET`       | Shared secret used to fetch a JWT from the backend's `/auth/get-token` endpoint [(find here)](https://github.com/Edge-Intelligence-Lab/ChatDKU-backend/blob/main/chatdku/.env.example). |
 
 These are used by the API routes in `app/api/chat/route.ts` and `app/api/auth/token/route.ts`, as well as the dev-mode rewrites in `next.config.ts`. All fall back to the internal hostname when `BACKEND_BASE_URL` is not set.
+
+#### Local development environment
+
+Create a `.env.local` file in the project root for local development overrides:
+
+```
+# Optional: use real backend instead of mock responses
+# MOCK_API=false
+
+# Optional: override backend URL (defaults to chatdku.dukekunshan.edu.cn:8999)
+# BACKEND_BASE_URL=https://your-custom-backend:8999
+```
 
 #### Cloudflare Tunnel setup (backend server)
 
