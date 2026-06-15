@@ -235,6 +235,16 @@ const en = {
 	"team.alumni": "Alumni",
 	"team.showMore": "Show more",
 	"team.showLess": "Show less",
+	
+	// features
+	"home.feature1.title": "Everything DKU, In One Place",
+	"home.feature1.desc": "Policies, deadlines, courses, bulletins, handbooks, and more — ChatDKU is grounded in official DKU information. Instead of searching across dozens of webpages and PDFs, get answers from a knowledge base built specifically for the DKU community.",
+	"home.feature2.title": "Ask Anytime, Get Answers Fast",
+	"home.feature2.desc": "ChatDKU is available whenever you need it. Simply open the website, ask your question, and receive answers in seconds — whether you're studying, planning, or navigating campus life.",
+	"home.feature3.title": "Answers You Can Verify",
+	"home.feature3.desc": "Every answer includes links back to the original DKU sources. Open the official page, view the referenced passage, and explore the information for yourself.",
+	"home.feature4.title": "Explore Campus with an Interactive Map",
+	"home.feature4.desc": "Find buildings, offices, printers, events, and essential campus services. Explore the map, learn more about any location, and continue the conversation with ChatDKU.",
 } as const;
 
 export default en;
