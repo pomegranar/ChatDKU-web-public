@@ -17,7 +17,7 @@ export function HeroSection() {
             {t("home.hero.title2")}
           </span>
         </h1>
-        <p className="text-lg md:text-xl max-w-4xl mx-auto mb-8 leading-relaxed text-muted-foreground whitespace-nowrap md:whitespace-normal">
+        <p className="text-base sm:text-lg md:text-xl max-w-xs sm:max-w-2xl md:max-w-3xl mx-auto mb-8 leading-relaxed text-muted-foreground break-words">
           <b className="underline underline-offset-3 text-foreground">ChatDKU</b>{" "}
           {t("home.hero.subtitle")}
         </p>
