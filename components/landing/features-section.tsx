@@ -2,16 +2,15 @@
 
 import { useLanguage } from "@/components/language-provider";
 import type { DictionaryKey } from "@/lib/i18n";
-import { Sparkles, FileSearch, Smartphone, MapPin } from "lucide-react";
-
+import { Sparkles, FileSearch, Smartphone, MapPin, History } from "lucide-react";
 
 interface Feature {
   id: number;
   icon: React.ComponentType<{ className?: string }>;
   titleKey: string;
   descKey: string;
-  color: "emerald" | "blue" | "purple" | "orange";
-  videoSrc?: string; 
+  color: "emerald" | "blue" | "purple" | "orange" | "teal";
+  videoSrc?: string;
 }
 
 function VideoPlaceholder({
@@ -72,6 +71,12 @@ const styles = {
     badgeBg: "bg-orange-500/10",
     bar: "bg-gradient-to-r from-orange-500 to-amber-300",
   },
+  teal: {
+    lightText: "text-teal-600 dark:text-teal-400",
+    badgeBorder: "border-teal-500/30",
+    badgeBg: "bg-teal-500/10",
+    bar: "bg-gradient-to-r from-teal-500 to-teal-300",
+  },
 };
 
 const features: Feature[] = [
@@ -81,7 +86,7 @@ const features: Feature[] = [
     titleKey: "home.feature1.title",
     descKey: "home.feature1.desc",
     color: "emerald",
-    // videoSrc: "/videos/feature1.mp4", // Uncomment and add path when ready
+    // videoSrc: "/videos/feature1.mp4",
   },
   {
     id: 2,
@@ -93,19 +98,27 @@ const features: Feature[] = [
   },
   {
     id: 3,
-    icon: Smartphone,
+    icon: History,
     titleKey: "home.feature3.title",
     descKey: "home.feature3.desc",
-    color: "purple",
+    color: "teal",
     // videoSrc: "/videos/feature3.mp4",
   },
   {
     id: 4,
-    icon: MapPin,
+    icon: Smartphone,
     titleKey: "home.feature4.title",
     descKey: "home.feature4.desc",
-    color: "orange",
+    color: "purple",
     // videoSrc: "/videos/feature4.mp4",
+  },
+  {
+    id: 5,
+    icon: MapPin,
+    titleKey: "home.feature5.title",
+    descKey: "home.feature5.desc",
+    color: "orange",
+    // videoSrc: "/videos/feature5.mp4",
   },
 ];
 
