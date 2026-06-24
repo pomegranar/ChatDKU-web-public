@@ -248,11 +248,6 @@ export default function TeamCreditsPage() {
               avatar="/avatars/kurtis.jpeg"
             />
             <GridMember
-              name="Haroon Butt"
-              classYear="Class of 2029"
-              avatar="/avatars/Haroon.jpg"
-            />
-            <GridMember
               name="Jingxuan Lin"
               classYear="Class of 2029"
               team="Backend / Agent Team Member"
