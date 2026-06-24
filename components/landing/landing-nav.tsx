@@ -15,7 +15,7 @@ function NavLinks({ className }: { className?: string }) {
 					{t("home.nav.stack")}
 				</Button>
 			</Link>
-			<Link href="#agent">
+			<Link href="#feature-1">
 				<Button variant="link" size="sm" className="px-2">
 					{t("home.nav.agent")}
 				</Button>

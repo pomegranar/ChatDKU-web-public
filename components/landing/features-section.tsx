@@ -136,6 +136,7 @@ export function FeaturesSection() {
           return (
             <div
               key={feature.id}
+              id={feature.id === 1 ? "feature-1" : undefined}
               className={`relative flex flex-col ${
                 isEven ? "md:flex-row-reverse" : "md:flex-row"
               } gap-6 md:gap-10 lg:gap-14 items-center p-5 md:p-7 lg:p-9 rounded-3xl bg-card/50 border border-border/30 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300`}
