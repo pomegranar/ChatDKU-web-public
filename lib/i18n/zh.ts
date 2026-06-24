@@ -229,6 +229,18 @@ const zh = {
 	"team.alumni": "往届成员",
 	"team.showMore": "展开更多",
 	"team.showLess": "收起",
+
+	// features
+	"home.feature1.title": "校园信息，一处尽览",
+	"home.feature1.desc": "校园政策、课程信息、重要日期、学生手册等官方资料汇聚于此。无需在网页和 PDF 之间来回查找，ChatDKU 帮你更快找到需要的信息。",
+	"home.feature2.title": "随时提问，即刻获得答案",
+	"home.feature2.desc": "需要帮助的时候，ChatDKU 随时都在。打开网站、输入问题，即可在几秒钟内获得答案，无论是学习、计划，还是应对校园生活中的各种问题。",
+	"home.feature3.title": "对话历史，随时可查",
+	"home.feature3.desc": "所有对话都会自动保存。无论是回顾之前的问题、继续未完成的讨论，还是查找重要信息，都能随时返回查看。",
+	"home.feature4.title": "有据可查，不止于答案",
+	"home.feature4.desc": "每个回答都附带引用来源，让你轻松查看原文内容，并一键访问对应的官方页面。",
+	"home.feature5.title": "探索校园，从地图开始",
+	"home.feature5.desc": "从教学楼到办公室，从打印机到校园活动，在地图上快速发现你需要的地点。点击任意位置了解详情，或直接向 ChatDKU 继续提问。",
 } as const;
 
 export default zh;
