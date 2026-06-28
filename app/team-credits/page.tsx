@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { BackButton } from "@/components/back-button";
 import { useLanguage } from "@/components/language-provider";
 import Link from "next/link";
+import { members, alumni } from "./data";
 
 function ExpandToggle({
   expanded,
@@ -25,7 +26,7 @@ function ExpandToggle({
 type MemberProps = {
   name: string;
   classYear: string;
-  team: string;
+  team?: string;
   role: string;
   avatar?: string;
   showContribution?: boolean;
@@ -141,119 +142,13 @@ export default function TeamCreditsPage() {
           <h1 className="text-3xl font-bold">{t("team.credits")}</h1>
         </div>
 
-        {/* Core Members */}
+        {/* Members */}
         <section className="space-y-4">
           <h2 className="text-xl font-semibold">{t("team.coreMembers")}</h2>
 
-          <MajorMember
-            name="Bing Luo"
-            classYear="PhD"
-            team="Project Advisor"
-            avatar="/avatars/Bing.jpg"
-            role=""
-            link="https://luobing1008.github.io/"
-            showContribution={false}
-          />
-
-          <MajorMember
-            name="Mingxi Li"
-            classYear="Research Assistant"
-            team="Project Leader"
-            avatar="/avatars/Mingxi.jpg"
-            role=""
-            showContribution={false}
-          />
-
-          <MajorMember
-            name="Anar Nyambayar"
-            classYear="Class of 2027"
-            link="https://www.anar-n.com"
-            team="Co-developer · Frontend Team Captian / Databases Team member / Agent Team Member"
-            avatar="/avatars/Anar.jpg"
-            role={`- Lead engineer for the Next.JS web frontend, responsible for interface design and continuous integration.
-                - Designed the SQL agent and the accompanying PostgreSQL database schema.
-                - Developed a local document ingestion solution to extract structured information from text, PDF, and DOCX documents for relational database population.
-                - Implemented adaptive response personalization based on inferred user preferences and interaction context.
-                - Added a developer-only mode for testing different agents and features.
-                - Migrated the web application to HTTPS.
-                - Performed various bug fixes and optimizations.
-                `}
-          />
-
-          <MajorMember
-            name="Munish Lohani"
-            classYear="Class of 2028"
-            team="Co-developer · Backend Team Captian / Evaluation Team Captian / Agent Team Member"
-            avatar="/avatars/Munish.jpg"
-            role={`- Managed backend deployment, including the transition from Flask backend to Django with NetID-based authentication, unified PostgreSQL database and implemented task automation using Celery.
-                - Developed and integrated speech-to-text functionality for frontend and backend.
-                - Working on evaluation.
-                `}
-          />
-
-          <MajorMember
-            name="Temuulen Enkhtamir"
-            classYear="Class of 2027"
-            team="Co-developer · Evaluation Team Member / Databases Team Member / Agent Team Member"
-            avatar="/avatars/Temuulen.jpg"
-            role={`- Developed core agent logic and algorithms.
-                - Scaled and optimized the database.
-                - Updated and enhanced the document ingestion pipeline.
-                - Integrated a tool-calling mechanism into the agent system.
-                `}
-          />
-
-          <MajorMember
-            name="Sean Allen Siegfreid R. Bugarin"
-            classYear="Class of 2026"
-            team="Co-developer"
-            avatar="/avatars/Sean.jpg"
-            role={`- Conducted he evaluation of ChatDKU, focusing on testing the current large language model and developing standardized datasets to ensure consistent and reliable performance assessment.
-                `}
-          />
-
-          <MajorMember
-            name="Zhiwei Li"
-            classYear="Class of 2028"
-            team="Co-developer · Databases Team Captain / Agent Team Member"
-            avatar="/avatars/Zhiwei.jpg"
-            role={`- Implemented database monitoring and performance diagnostics to ensure system stability and enable iterative optimization.
-                - Optimized data ingestion, filtering, and storage pipelines to improve reliability and stability of the ChatDKU database.
-                - Enhanced agent intelligence by investigating and integrating new features and retrieval mechanisms.
-                `}
-          />
-        </section>
-
-        {/* New Members */}
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold">{t("team.newMembers")}</h2>
-
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-6">
-            <GridMember
-              name="Ruihan Yin"
-              classYear="Class of 2028"
-              team="Frontend / Agent Team Member"
-              avatar="/avatars/RuihanYin.jpg"
-            />
-            <GridMember
-              name="Zeyu Yu"
-              classYear="Class of 2028"
-              team="Backend Team Member"
-              avatar="/avatars/Zeyu.jpg"
-            />
-            <GridMember
-              name="Kurtis Kwan"
-              classYear="Class of 2027"
-              team="Agent Team Member"
-              avatar="/avatars/kurtis.jpeg"
-            />
-            <GridMember
-              name="Jingxuan Lin"
-              classYear="Class of 2029"
-              team="Backend / Agent Team Member"
-              avatar="/avatars/Jingxuan.jpg"
-            />
-          </div>
+          {members.map((member) => (
+            <MajorMember key={member.name} {...member} role={member.role ?? ""} />
+          ))}
         </section>
 
         {/* Alumni */}
@@ -261,21 +156,9 @@ export default function TeamCreditsPage() {
           <h2 className="text-xl font-semibold">{t("team.alumni")}</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <GridMember
-              name="Yuxiang Lin"
-              classYear="Class of 2026"
-              avatar="/avatars/Yuxiang.jpeg"
-            />
-            <GridMember
-              name="Chenshuhao(Cody)Qin"
-              classYear="Class of 2025"
-              avatar="/avatars/Chenshuhao.jpg"
-            />
-            <GridMember
-              name="Ningyuan Yang"
-              classYear="Class of 2026"
-              avatar="/avatars/Ningyuan.jpg"
-            />
+            {alumni.map((member) => (
+              <GridMember key={member.name} {...member} />
+            ))}
           </div>
         </section>
       </div>
