@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { LanguageToggle } from "@/components/ui/language-toggle";
 import { useLanguage } from "@/components/language-provider";
+import { ModeToggle } from "../ui/mode-toggle";
 
 function NavLinks({ className }: { className?: string }) {
 	const { t } = useLanguage();
@@ -45,11 +46,17 @@ export function LandingNav() {
 		<nav className="sticky top-0 z-50  bg-background/80 backdrop-blur-sm rounded-b-sm ">
 			<div className="lg:px-20 md:px-10 px-5 mx-auto py-3 sm:py-5 flex items-center justify-between">
 				<div className="flex items-center gap-2">
-					<Image src="/logos/new_logo.svg" alt="ChatDKU" width={40} height={40} />
+					<Image
+						src="/logos/new_logo.svg"
+						alt="ChatDKU"
+						width={40}
+						height={40}
+					/>
 					<span className="font-bold font-inter text-3xl">ChatDKU</span>
 				</div>
 				<div className="flex items-center">
 					<NavLinks className="hidden sm:inline-block pr-4" />
+					<ModeToggle />
 					<LanguageToggle />
 					<Link href="/login">
 						<Button className="rounded-full px-4 mx-2">
