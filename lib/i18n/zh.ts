@@ -161,6 +161,7 @@ const zh = {
 	"login.termsTooltip": "请先接受使用条款才能使用 ChatDKU",
 	"login.footer": "2026 边缘智能实验室",
 	"login.serverError": "无法连接到服务器，请稍后重试。",
+	"login.netidNotice": "仅在 DKU 网络或连接 DKU VPN 时可使用 NetID 登录。",
 
 	// Chat page
 	"chat.welcome": "欢迎使用 ChatDKU",

@@ -8,7 +8,7 @@ import { useLanguage } from "@/components/language-provider";
 export function HeroSection() {
   const { t } = useLanguage();
   return (
-    <section className="relative overflow-hidden py-20 md:py-28 px-4">
+    <section className="relative overflow-hidden py-20 md:py-[16vh] px-4">
       <div className="mx-auto text-center max-w-5xl">
         <h1 className="text-4xl font-serif sm:text-5xl md:text-6xl tracking-tight mb-6 leading-tight">
           {t("home.hero.title1")}
@@ -18,10 +18,12 @@ export function HeroSection() {
           </span>
         </h1>
         <p className="text-base sm:text-lg md:text-xl max-w-xs sm:max-w-2xl md:max-w-3xl mx-auto mb-8 leading-relaxed text-muted-foreground break-words">
-          <b className="underline underline-offset-3 text-foreground">ChatDKU</b>{" "}
+          <b className="underline underline-offset-3 text-foreground">
+            ChatDKU
+          </b>{" "}
           {t("home.hero.subtitle")}
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row py-8 justify-center">
           <Link href="/login">
             <Button
               size="lg"
@@ -31,7 +33,7 @@ export function HeroSection() {
             </Button>
           </Link>
         </div>
-        <div className="mt-10 flex text-base flex-col sm:flex-row items-center justify-center gap-2 text-muted-foreground">
+        <div className="mt-20 flex text-base flex-col sm:flex-row items-center justify-center gap-2 text-muted-foreground">
           <span>{t("home.hero.broughtBy")}</span>
           <Link
             href="https://sites.duke.edu/edgeintelligence/"

@@ -167,6 +167,8 @@ const en = {
 	"login.termsTooltip": "Please accept the Terms and Conditions to use ChatDKU",
 	"login.footer": "2026 Edge Intelligence Lab",
 	"login.serverError": "Couldn't connect to server. Please try again later.",
+	"login.netidNotice":
+		"NetID login available only within DKU network or on DKU VPN.",
 
 	// Chat page
 	"chat.welcome": "Welcome to ChatDKU",
@@ -244,10 +246,10 @@ const en = {
 	// features
 	"home.feature1.title": "Everything DKU, In One Place",
 	"home.feature1.desc":
-		"Policies, deadlines, courses, bulletins, handbooks, and more — ChatDKU is grounded in official DKU information. Instead of searching across dozens of webpages and PDFs, get answers from a knowledge base built specifically for the DKU community.",
+		"Policies, deadlines, courses, bulletins, handbooks, and more: all grounded in official DKU information. Instead of searching across dozens of webpages and PDFs, get answers from a knowledge base built specifically for the DKU community.",
 	"home.feature2.title": "Ask Anytime, Get Answers Fast",
 	"home.feature2.desc":
-		"ChatDKU is available whenever you need it. Simply open the website, ask your question, and receive answers in seconds — whether you're studying, planning, or navigating campus life.",
+		"ChatDKU is available whenever you need it. Whether you're studying, planning, or navigating campus life. Simply open the website, ask your question, and receive answers in seconds. ",
 	"home.feature3.title": "Conversation History, Always Available",
 	"home.feature3.desc":
 		"Every conversation is saved automatically, making it easy to revisit past questions, continue ongoing discussions, and keep important information within reach.",

@@ -2,7 +2,13 @@
 
 import { useLanguage } from "@/components/language-provider";
 import type { DictionaryKey } from "@/lib/i18n";
-import { Sparkles, FileSearch, Smartphone, MapPin, History } from "lucide-react";
+import {
+  Sparkles,
+  FileSearch,
+  Smartphone,
+  MapPin,
+  History,
+} from "lucide-react";
 
 interface Feature {
   id: number;
@@ -137,18 +143,12 @@ export function FeaturesSection() {
             <div
               key={feature.id}
               id={feature.id === 1 ? "feature-1" : undefined}
-              className={`relative flex flex-col ${
-                isEven ? "md:flex-row-reverse" : "md:flex-row"
-              } gap-6 md:gap-10 lg:gap-14 items-center p-5 md:p-7 lg:p-9 rounded-3xl bg-card/50 border border-border/30 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300`}
+              className={`relative flex flex-col ${isEven ? "md:flex-row-reverse" : "md:flex-row"
+                } gap-6 md:gap-10 lg:gap-14 items-center p-5 md:p-7 lg:p-9 rounded-3xl bg-card/50 border border-border/30 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300`}
             >
               <div className="flex-1 space-y-3 md:space-y-4">
-                <div
-                  className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-xs font-semibold tracking-wide uppercase ${s.badgeBorder} ${s.badgeBg} ${s.lightText}`}
-                >
-                  <Icon className="h-3 w-3" />
-                  Feature {feature.id}
-                </div>
                 <h3 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight text-foreground">
+                  <Icon className="h-6 w-6 inline-flex my-auto pb-1 pr-1" />
                   {t(feature.titleKey as DictionaryKey)}
                 </h3>
                 <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-prose">

@@ -18,6 +18,7 @@ import Image from "next/image";
 import { Cormorant_Garamond } from "next/font/google";
 import { useLanguage } from "@/components/language-provider";
 import { LanguageToggle } from "@/components/ui/language-toggle";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 const cgaramond = Cormorant_Garamond({
   variable: "--font-garamond",
@@ -59,7 +60,7 @@ export default function LoginPage() {
           if (payload.exp) {
             expires = new Date(payload.exp * 1000);
           }
-        } catch {}
+        } catch { }
         Cookies.set("chatdku_token", token, { expires });
       } catch (e) {
         console.error("JWT fetch failed:", e);
@@ -73,17 +74,16 @@ export default function LoginPage() {
 
   return (
     <div className="relative w-screen h-screen">
-      <div className="absolute left-0 top-0 w-full md:w-1/2 h-[20vh] md:h-full overflow-hidden ">
+      <div className="absolute left-0 top-0 w-full md:w-1/2 h-[20vh] md:h-full overflow-hidden">
         <Image
           src={"/ADBVC-2.webp"}
           alt="Photo of DKU campus."
           fill
-          className="object-cover md:object-bottom md:rounded-4xl md:p-3 animate-in fade-in-30 duration-200 drop-shadow-md"
-          priority
+          className="object-cover md:object-bottom md:rounded-4xl md:p-1.5 animate-in fade-in-30 duration-200 drop-shadow-md"
         />
       </div>
       <div className="flex flex-col items-center md:absolute right-0 translate-y-[20vh] md:translate-y-0 top-0 md:top-0 md:w-1/2 md:h-full overflow-scroll space-y-4 justify-between">
-        <div className="w-full flex flex-row items-center justify-between p-3 sm:p-5">
+        <div className="w-full flex flex-row items-center justify-between p-3">
           <Link href="/" className="cursor-pointer">
             <h1 className="text-xl md:text-2xl lg:text-3xl flex items-center">
               <Image
@@ -92,10 +92,10 @@ export default function LoginPage() {
                 width={40}
                 height={40}
               />
-              <b className="ml-1">ChatDKU</b>
+              <b className="font-inter">ChatDKU</b>
             </h1>
           </Link>
-          <div className="sm:space-x-2 flex items-center">
+          <div className=" flex items-center">
             <Link href={"/"}>
               <Button variant="link">{t("login.home")}</Button>
             </Link>
@@ -105,6 +105,7 @@ export default function LoginPage() {
             <Link href={"/team-credits"}>
               <Button variant="link">{t("login.team")}</Button>
             </Link>
+            <ModeToggle />
             <LanguageToggle />
           </div>
         </div>
@@ -193,6 +194,9 @@ export default function LoginPage() {
               )}
             </Tooltip>
           </TooltipProvider>
+          <p className="text-foreground/70 text-xs w-full text-center mt-2">
+            {t("login.netidNotice")}
+          </p>
         </div>
         <div className="p-2 text-xs opacity-50 mt-10 w-full text-end">
           {t("login.footer")}

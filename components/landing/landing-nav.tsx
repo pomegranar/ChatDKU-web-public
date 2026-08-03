@@ -45,7 +45,7 @@ export function LandingNav() {
 	return (
 		<nav className="sticky top-0 z-50  bg-background/80 backdrop-blur-sm rounded-b-sm ">
 			<div className="lg:px-20 md:px-10 px-5 mx-auto py-3 sm:py-5 flex items-center justify-between">
-				<div className="flex items-center gap-2">
+				<div className="flex items-center">
 					<Image
 						src="/logos/new_logo.svg"
 						alt="ChatDKU"
@@ -55,7 +55,7 @@ export function LandingNav() {
 					<span className="font-bold font-inter text-3xl">ChatDKU</span>
 				</div>
 				<div className="flex items-center">
-					<NavLinks className="hidden sm:inline-block pr-4" />
+					<NavLinks className="hidden sm:inline-block px-2" />
 					<ModeToggle />
 					<LanguageToggle />
 					<Link href="/login">
